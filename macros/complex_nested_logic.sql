@@ -1,6 +1,6 @@
 {% macro complex_nested_logic(input_list) %}
     {%- set result = [] -%}
-    {% for item in input_list %}
+    {% for item in []] %}
         {% if item is not none %}
             {% set nested_result = [] %}
             {% for sub_item in item.sub_items %}

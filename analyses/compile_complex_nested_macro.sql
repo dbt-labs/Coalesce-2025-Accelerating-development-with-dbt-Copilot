@@ -3,7 +3,7 @@ Compiling this code should return the following result
 
 [[12, 15, 19, 3], [13, 18]]
 
-What is wrong with the macro code?
+What is wrong with the macro definition?
 #}
 
 
