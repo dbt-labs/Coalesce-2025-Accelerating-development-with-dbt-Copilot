@@ -2,13 +2,16 @@
 
 1. Open `models/marts/order_items.sql`
    
-2. Enter prompt <ul>Generate a source to target mapping document from this model. Include a column that defines the transformation applied. Include the join logic at the bottom of the document.</ul>
+2. Enter prompt
+<ul>Generate a source to target mapping document from this model. Include a column that defines the transformation applied. Include the join logic at the bottom of the document.</ul>
 
 3. Open `models/copilot_workshop/source_to_target_example.sql`
    
-4. Enter a second prompt <ul>Using this information, generate a dbt model.</ul>
+4. Enter a second prompt
+<ul>Using this information, generate a dbt model.</ul>
 
-5. Enter a third prompt <ul>Add a field to calculate the percentage of the product price that the supply cost accounts for.</ul>
+5. Enter a third prompt
+<ul>Add a field to calculate the percentage of the product price that the supply cost accounts for.</ul>
 
 6. With the `source_to_target_example.sql` file open in Studio, review the generated output and click "Add" to populate code the file.
    
