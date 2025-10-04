@@ -10,7 +10,9 @@
 3. Open `models/copilot_workshop/source_to_target_example.sql`
    
 4. Enter a second prompt
-<ul>Using this information, generate a dbt model.</ul>
+<ul>Using the information from the source-to-target mapping, 
+   sketch out a dbt model with those transformations and joins.
+</ul>
 
 5. Enter a third prompt
 <ul>Add a field to calculate the percentage of the product price 
