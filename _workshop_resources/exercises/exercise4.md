@@ -7,7 +7,10 @@
 3. Open dbt Copilot SQL window
    
 4. Ask Copilot about the error.
-    <ul> This SQL query is generating an error, can you find the
+    <ul> This SQL query is generating an error:
+    This SQL query is generating an error:
+    INVENTORY.COMPANY] is not a valid group by expression.
+    Can you find the
     problem with the syntax? </ul>
 
 5. Revise the code based on Copilot's suggestion
