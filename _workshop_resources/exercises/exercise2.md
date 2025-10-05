@@ -8,7 +8,9 @@
 <ul>
 Generate a source to target mapping document from this model. 
 Include a column that defines the transformation applied. 
-When describing join logic, use the node that the data originates from and describe how it flows through CTEs. Include the join logic at the bottom of the document.
+When describing join logic, use the node that the data originates 
+from and describe how it flows through CTEs. Include the join logic 
+at the bottom of the document.
 </ul>
 
 4. Open `models/copilot_workshop/source_to_target_example.sql`
