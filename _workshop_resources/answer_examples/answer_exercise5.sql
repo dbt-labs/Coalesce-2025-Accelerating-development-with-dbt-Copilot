@@ -5,11 +5,11 @@ Revise loop to use input_list instead of empty list object, line 8 in this file
   
 {% macro complex_nested_logic(input_list) %}
     {%- set result = [] -%}
-    {% for item in input_list %}
+    {% for item in input_list %}. {# changed from [] to input_list #}
         {% if item is not none %}
             {% set nested_result = [] %}
             {% for sub_item in item.sub_items %}
-                {% if sub_item.condition %}
+                {% if sub_item.condition %} {# changed from string comparison to boolean #}
                     {% set processed_value = sub_item.value * 2 %}
                     {% if processed_value > 10 %}
                         {{ nested_result.append(processed_value) }}
