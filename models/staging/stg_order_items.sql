@@ -2,8 +2,7 @@ with
 
 source as (
 
-    -- {# This references seed (CSV) data - try switching to {{ source('ecom', 'raw_items') }} #}
-    select * from {{ ref('raw_items') }}
+    select * from {{ source('ecom', 'raw_items') }}
 
 ),
 
