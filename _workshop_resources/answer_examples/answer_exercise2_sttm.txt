@@ -1,0 +1,30 @@
+Source to Target Mapping Document
+Source Tables
+stg_order_items: Contains detailed information about each order item.
+stg_orders: Contains information about orders, including order dates.
+stg_products: Contains product details such as name, price, and type (food or drink).
+stg_supplies: Contains supply cost information related to products.
+Target Table
+joined: A consolidated view that combines order items, orders, products, and supply costs.
+Column Mapping and Transformations
+Target Column	Source Table/CTE	Source Column	Transformation Description
+order_item_id	stg_order_items	order_item_id	Direct selection
+order_id	stg_order_items	order_id	Direct selection
+product_id	stg_order_items	product_id	Direct selection
+order_date	stg_orders	order_date	Direct selection
+product_name	stg_products	product_name	Direct selection
+product_price	stg_products	product_price	Direct selection
+is_food_item	stg_products	is_food_item	Direct selection
+is_drink_item	stg_products	is_drink_item	Direct selection
+supply_cost	order_supplies_summary	supply_cost	Aggregated sum of supply_cost grouped by product_id
+Join Logic
+order_items: Base CTE selecting all columns from stg_order_items.
+orders: Base CTE selecting all columns from stg_orders.
+products: Base CTE selecting all columns from stg_products.
+supplies: Base CTE selecting all columns from stg_supplies.
+order_supplies_summary: Aggregates supply_cost from supplies grouped by product_id.
+Join Flow
+joined:
+Left join orders on order_items.order_id = orders.order_id to bring in order dates.
+Left join products on order_items.product_id = products.product_id to bring in product details.
+Left join order_supplies_summary on order_items.product_id = order_supplies_summary.product_id to bring in aggregated supply costs.
