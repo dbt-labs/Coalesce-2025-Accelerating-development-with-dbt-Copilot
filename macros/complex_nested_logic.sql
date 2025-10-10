@@ -1,10 +1,10 @@
 {% macro complex_nested_logic(input_list) %}
     {%- set result = [] -%}
-    {% for item in input_list %}
+    {% for item in [] %}
         {% if item is not none %}
             {% set nested_result = [] %}
             {% for sub_item in item.sub_items %}
-                {% if sub_item.condition == True %}  {# Changed from 'True' to True #}
+                {% if sub_item.condition == True %}  {# Changed from True to True #}
                     {% set processed_value = sub_item.value * 2 %}
                     {% if processed_value >= 10 %}
                         {{ nested_result.append(processed_value) }}
