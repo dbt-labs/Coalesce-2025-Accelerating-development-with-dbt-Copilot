@@ -36,6 +36,4 @@ select
 
 from inventory
 where sale_date < date '2025-07-01'
-
-
-
+group by company
