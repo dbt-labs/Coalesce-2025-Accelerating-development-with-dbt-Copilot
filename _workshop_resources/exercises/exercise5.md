@@ -13,15 +13,23 @@
 This macro is returning an empty list, what is the most likely cause of this?
 </ul>
 
-6. Use the provided response to edit the macro code and save it.
+6. Ask Copilot to make the change.
+<ul>
+Please make these changes.
+</ul>
 
-7. Return to `analyses/troubleshooting_macro.sql` and compile
+7. Click replace to update the sql file with Copilot's 
+changes, or copy and paste updated macro into sql window.
 
-8. The macro now returns values, but they are not quite correct.
+8. Click Save.
+
+9. Return to `analyses/troubleshooting_macro.sql` and compile.
+
+10. The macro now returns values, but they are not quite correct.
     
-9. Return to `compile_complex_nested_macro.sql`
+11. Return to `compile_complex_nested_macro.sql`
 
-10. Ask Copilot to identify this issue by provided your inputs
+12. Ask Copilot to identify this issue by provided your inputs
 <ul> 
 When providing this input:
 {{ complex_nested_logic( input_list = [ { 'sub_items': [ { 'condition': True, 'value': 6,
@@ -38,7 +46,14 @@ But I am getting a result of [[6, 15, 19, 3], [4, 18]]
 What is the most likely cause?
 </ul>
 
-11. Use the provided response to edit the macro code and save it.
+13. Ask Copilot to make the change.
+<ul>
+Please make these changes.
+</ul>
 
-12. Return to `analyses/troubleshooting_macro.sql` and compile to check!
-  
+14. Click replace to update the sql file with Copilot's 
+changes, or copy and paste updated macro into sql window.
+
+15. Click Save.
+
+16. Return to `analyses/troubleshooting_macro.sql` and compile.
