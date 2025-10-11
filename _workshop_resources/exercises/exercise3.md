@@ -27,10 +27,12 @@ context about the model because the macro is meant to determine this
 information about any given model. 
 First, retrieve all of the columns in the model. 
 Second, determine if any of the columns have the word 'customer' 
-in the column name. Ignore case. Create a select statement that 
-selects all columns that include the word 'customer' from the model 
-provided. Return the select statement if any columns are found. If no 
-columns are found, return 'select null as col'. 
+in the column name. Ignore case. 
+Create a select statement that selects all columns that include 
+the word 'customer' from the model provided. 
+If any columns are found, return the select statement 
+in a CTE named customer_columns.
+If no columns are found, return the CTE with 'select null as col'. 
 Write it to handle any model passed to it. 
 </ul>
 
