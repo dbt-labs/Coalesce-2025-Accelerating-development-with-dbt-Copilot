@@ -8,25 +8,27 @@
 
 
 {# Complex macro #}
-{% macro select_customer_columns(model) %}
-   {# Retrieve all columns from the specified model #}
-   {%- set columns = adapter.get_columns_in_relation(ref(model)) -%}
-   {%- set customer_columns = [] -%}
+{% macro select_customer_columns(model_name) %}
+    {# Get the list of columns from the model #}
+    {% set columns = adapter.get_columns_in_relation(ref(model_name)) %}
 
+    {# Filter columns to find those containing 'customer' (case-insensitive) #}
+    {% set customer_columns = [] %}
+    {% for column in columns %}
+        {% if 'customer' in column.name | lower %}
+            {% do customer_columns.append(column.name) %}
+        {% endif %}
+    {% endfor %}
 
-   {# Iterate over each column to check if 'customer' is in the column name (case-insensitive) #}
-   {%- for column in columns -%}
-       {%- if 'customer' in column.name | lower -%}
-           {# Add column to the list if it includes 'customer' #}
-           {%- do customer_columns.append(column.name) -%}
-       {%- endif -%}
-   {%- endfor -%}
+    {# Construct the SQL statement #}
+    with customer_columns as (
+        {% if customer_columns | length > 0 %}
+            select {{ customer_columns | join(', ') }}
+            from {{ ref(model_name) }}
+        {% else %}
+            select null as col
+        {% endif %}
+    )
 
-
-   {# Construct a select statement with the filtered columns or default to 'select null as col' if none are found #}
-   {%- if customer_columns | length > 0 -%}
-       select {{ customer_columns | join(', ') }}
-   {%- else -%}
-       select null as col
-   {%- endif -%}
+    select * from customer_columns
 {% endmacro %}
