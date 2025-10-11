@@ -10,6 +10,7 @@ Generate a dbt macro. The argument provided will be a column
 with a date datatype. Write a case statement that determines 
 a status of 'active' if the column value is within the last year, 
 and ‘inactive’ if it is not.
+Return as SQL.
 </ul>
 
 3. Review generated output and click "Add" button to populate code
@@ -21,12 +22,17 @@ in your sql file.
    
 6. Enter prompt
 <ul>
-Generate code for a dbt macro as a general template. The macro 
-will take a model as an argument. Retrieve all columns in the model. 
-Create a select statement that selects all columns from the model 
-that include the word 'customer', ignore case. Return the select 
-statement if any columns are found. 
+Generate a dbt macro. The macro will take a model as an argument. 
+The macro will determine information about the columns in the model.
+First, retrieve all of the columns in the model. 
+Second, determine if any of the columns have the word 'customer' in the column name.  
+Ignore case.
+Create a select statement that selects all columns  
+that include the word 'customer' from the model provided. 
+Return the select statement if any columns are found. 
 If no columns are found, return 'select null as col'.
+Write it to handle any model passed to it.
+Return as SQL.
 </ul>
 
 7. Enter prompt
