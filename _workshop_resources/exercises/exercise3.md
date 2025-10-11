@@ -28,19 +28,24 @@ information about any given model.
 First, retrieve all of the columns in the model. 
 Second, determine if any of the columns have the word 'customer' 
 in the column name. Ignore case. 
-Create a select statement that selects all columns that include 
-the word 'customer' from the model provided. 
+</ul>
+
+7. Add additional requirements in the next prompt
+<ul>
+Now modify this macro to create a select statement that 
+selects all columns that include the word 'customer' 
+from the model provided. 
 If any columns are found, return the select statement 
 in a CTE named customer_columns.
 If no columns are found, return the CTE with 'select null as col'. 
 Write it to handle any model passed to it. 
 </ul>
 
-7. Enter prompt
+8. Enter a third prompt
 <ul>
 Revise this code with comments explaining what the macro does.
 </ul>
 
-8. Copy and paste the general template into the sql file.
+9. Copy and paste the macro code into the sql file.
 
-9. Save the sql file.
+10. Save the sql file.
