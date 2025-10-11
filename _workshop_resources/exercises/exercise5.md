@@ -15,7 +15,7 @@ This macro is returning an empty list, what is the most likely cause of this?
 
 6. Ask Copilot to make the change.
 <ul>
-Please make these changes.
+Give me the updated code with that change.
 </ul>
 
 7. Click replace to update the sql file with Copilot's 
@@ -48,7 +48,7 @@ What is the most likely cause?
 
 13. Ask Copilot to make the change.
 <ul>
-Please make these changes.
+Give me the updated code with that change.
 </ul>
 
 14. Click replace to update the sql file with Copilot's 
