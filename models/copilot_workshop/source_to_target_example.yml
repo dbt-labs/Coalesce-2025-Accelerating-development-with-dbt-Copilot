@@ -1,0 +1,44 @@
+models:
+- name: source_to_target_example
+  description: This model integrates customer data with their order history to provide
+    a comprehensive view of customer activity and status. It calculates key metrics
+    such as the total number of orders, first and last order dates, and total spending.
+    Additionally, it determines the current status of customers based on their recent
+    activity and calculates the supply cost percentage relative to their lifetime
+    spend.
+  columns:
+  - name: customer_id
+    description: A unique identifier for each customer.
+    data_tests:
+      - not_null
+      - unique
+  - name: lifetime_orders
+    description: The total number of distinct orders placed by the customer.
+    data_tests:
+      - not_null
+  - name: first_order_date
+    description: The date when the customer placed their first order.
+    data_tests:
+      - not_null
+  - name: last_order_date
+    description: The date when the customer placed their most recent order.
+    data_tests:
+      - not_null
+  - name: lifetime_spend_pretax
+    description: The total amount spent by the customer before tax.
+    data_tests:
+      - not_null
+  - name: lifetime_spend
+    description: The total amount spent by the customer including tax.
+    data_tests:
+      - not_null
+  - name: customer_status
+    description: Indicates whether the customer is currently active or inactive based
+      on their order history.
+    data_tests:
+      - not_null
+  - name: supply_cost_percentage
+    description: The percentage of the supply cost relative to the customer's lifetime
+      pre-tax spend.
+    data_tests:
+      - not_null
