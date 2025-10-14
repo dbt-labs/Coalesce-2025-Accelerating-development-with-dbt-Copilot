@@ -3,7 +3,6 @@
 1. Open `models/copilot_workshop/recreate_customers.sql`
 
 2. Open dbt Copilot SQL
-   
 3. Enter prompt
 <ul>
 Bring in the `@stg_customers`, `@orders`, and `@order_items` 
@@ -32,8 +31,7 @@ Add a select statement to select all from the `final` CTE.
 6. Review generated output and click "Add" button to populate code in your sql file.
 
 7. Save the `models/copilot_workshop/recreate_customers.sql` file
-   
-7. OPTIONAL: Enter a final prompt as a preview for the next exercise.
+8. OPTIONAL: Enter a final prompt as a preview for the next exercise.
 <ul>
 Create a source to target mapping spreadsheet from this model.  
 Include a column that defines the transformation applied.

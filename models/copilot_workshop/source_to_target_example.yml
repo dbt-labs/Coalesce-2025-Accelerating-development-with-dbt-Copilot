@@ -1,0 +1,41 @@
+models:
+- name: source_to_target_example
+  description: This model consolidates data from order items, orders, products, and
+    supplies to provide a comprehensive view of each order, including product details
+    and supply costs. It calculates the percentage of supply cost relative to the
+    product price, which can be useful for analyzing cost efficiency and pricing strategies.
+  columns:
+  - name: order_item_id
+    description: A unique identifier for each order item.
+    data_tests:
+      - unique
+      - not_null
+  - name: order_id
+    description: A unique identifier for each order.
+    data_tests:
+      - not_null
+  - name: product_id
+    description: A unique identifier for each product.
+    data_tests:
+      - not_null
+  - name: order_date
+    description: The date when the order was placed.
+    data_tests:
+      - not_null
+  - name: product_name
+    description: The name of the product.
+    data_tests:
+      - not_null
+  - name: product_price
+    description: The price of the product.
+    data_tests:
+      - not_null
+  - name: is_food_item
+    description: Indicates whether the product is a food item.
+  - name: is_drink_item
+    description: Indicates whether the product is a drink item.
+  - name: total_supply_cost
+    description: The total cost of supplies for the product.
+  - name: supply_cost_percentage
+    description: The percentage of the product price that is attributed to supply
+      costs.
