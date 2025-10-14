@@ -1,0 +1,27 @@
+models:
+- name: source_to_target_example
+  description: This model consolidates data from order items, orders, products, and
+    supplies to provide a comprehensive view of each order. It includes details such
+    as order date, product information, and supply cost, along with the percentage
+    of supply cost relative to product price.
+  columns:
+  - name: order_item_id
+    description: A unique identifier for each order item.
+  - name: order_id
+    description: A unique identifier for each order.
+  - name: product_id
+    description: A unique identifier for each product.
+  - name: order_date
+    description: The date when the order was placed.
+  - name: product_name
+    description: The name of the product.
+  - name: product_price
+    description: The price of the product.
+  - name: is_food_item
+    description: Indicates whether the product is a food item.
+  - name: is_drink_item
+    description: Indicates whether the product is a drink item.
+  - name: supply_cost
+    description: The total cost of supplies for the product.
+  - name: supply_cost_percentage
+    description: The percentage of the supply cost relative to the product price.
