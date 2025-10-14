@@ -55,4 +55,3 @@ semantic_models:
     agg: count_distinct
     create_metric: true
     expr: product_id
-  primary_entity: order_item
