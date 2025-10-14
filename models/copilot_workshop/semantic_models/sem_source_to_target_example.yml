@@ -1,0 +1,58 @@
+semantic_models:
+- name: source_to_target_example
+  description: This model consolidates data from order items, orders, products, and
+    supplies to provide a comprehensive view of each order item, including its associated
+    product details, order date, and supply cost metrics. It calculates the total
+    supply cost for each product and determines the supply cost percentage relative
+    to the product price.
+  model: ref('source_to_target_example')
+  defaults:
+    agg_time_dimension: order_date
+  entities:
+  - name: order_item
+    type: primary
+    expr: order_item_id
+  - name: order
+    type: foreign
+    expr: order_id
+  - name: product
+    type: foreign
+    expr: product_id
+  dimensions:
+  - name: order_date
+    type: time
+    type_params:
+      time_granularity: day
+  - name: product_name
+    type: categorical
+  - name: is_food_item
+    type: categorical
+  - name: is_drink_item
+    type: categorical
+  measures:
+  - name: product_price
+    description: The price of the product.
+    agg: average
+    create_metric: true
+  - name: total_supply_cost
+    description: The total cost of supplies for the product.
+    agg: sum
+    create_metric: true
+  - name: supply_cost_percentage
+    description: The percentage of the product price that is attributed to supply
+      costs.
+    agg: average
+    create_metric: true
+  - name: count_order_item
+    agg: count
+    create_metric: true
+    expr: order_item_id
+  - name: count_order
+    agg: count_distinct
+    create_metric: true
+    expr: order_id
+  - name: count_product
+    agg: count_distinct
+    create_metric: true
+    expr: product_id
+  primary_entity: order_item
