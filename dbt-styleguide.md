@@ -25,7 +25,6 @@
 - Do not use or call dbt macros unless you are explicitly instructed to
 - Do not re-alias CTE names.
 - Do not use short table aliases like `select * from orders as o` -- always prefer longer, explicit table aliases or no aliases at all. `select * from orders` is better. 
-- Do not include semicolons (;) to end SQL statements like `select 1 as id;` -- always prefer syntax without like `select 1 as id`
 
 ## Styling Jinja
 - When using Jinja delimiters, use spaces on the inside of your delimiter, like `{{ this }}` instead of `{{this}}`
