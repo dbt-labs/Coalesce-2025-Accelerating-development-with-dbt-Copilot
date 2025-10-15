@@ -31,11 +31,9 @@ with
 select
     company,
     count(*) as items_sold,
-    sum(item_id) as total_revenue,
+    sum(price) as total_revenue,  -- Corrected to sum(price) instead of sum(item_id)
     sum(price) / count(*) as avg_price
 
 from inventory
-where sale_date < date '2025-07-01'
-
-
-
+where sale_date > date '2025-07-01'
+group by company
