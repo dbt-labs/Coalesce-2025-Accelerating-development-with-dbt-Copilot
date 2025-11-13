@@ -27,7 +27,7 @@ changes, or copy and paste updated macro into sql window.
 
 10. The macro now returns values, but they are not quite correct.
     
-11. Return to `compile_complex_nested_macro.sql`
+11. Return to `complex_nested_macro.sql`
 
 12. Ask Copilot to identify this issue by provided your inputs
 <ul> 
