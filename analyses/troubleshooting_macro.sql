@@ -7,37 +7,22 @@ What is wrong with the macro definition?
 #}
 
 
-{{ complex_nested_logic(
-    input_list = [
-    {
-        'sub_items': [
-            {
-                'condition': True,
-                'value': 6,  
-                'extras': [
-                    {'flag': True, 'amount': 5},  
-                    {'flag': True, 'amount': 8},  
-                ],
-            },
-            {
-                'condition': False,
-                'value': 3,  
-                'extras': [
-                    {'flag': False, 'amount': 10},
-                ],
-            },
-        ],
-    },
-    {
-        'sub_items': [
-            {
-                'condition': True,
-                'value': 4,  
-                'extras': [
-                    {'flag': True, 'amount': 6},  
-                ],
-            },
-        ],
-    },
-]
-)}}
+{% macro complex_nested_logic(input_list) %}
+    {% set result = [] %}
+    {% for item in input_list %}
+        {% set sub_result = [] %}
+        {% for sub_item in item.sub_items %}
+            {% if sub_item.condition %}
+                {% set total_value = sub_item.value %}
+                {% for extra in sub_item.extras %}
+                    {% if extra.flag %}
+                        {% set total_value = total_value + extra.amount %}
+                    {% endif %}
+                {% endfor %}
+                {% do sub_result.append(total_value) %}
+            {% endif %}
+        {% endfor %}
+        {% do result.append(sub_result) %}
+    {% endfor %}
+    {{ return(result) }}
+{% endmacro %}
