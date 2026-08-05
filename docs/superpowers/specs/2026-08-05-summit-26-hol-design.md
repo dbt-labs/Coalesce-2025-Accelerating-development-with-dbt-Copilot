@@ -1,4 +1,4 @@
-# Summit 2026 Hands-On Lab: Accelerating Analytics with AI — Design
+# Summit 2026 Hands-On Lab: Accelerating Analytics with AI - Design
 
 ## Context
 
@@ -17,7 +17,7 @@ this the "prompt → review → capture → accelerate" loop, broken into five "
 that map 1:1 to five lessons in the course outline.
 
 This repo is being rebuilt on a new branch, `summit-26-hol`, as the **fully-built end state**
-of the lab — every artifact attendees would create during the session (AGENTS.md, the skill,
+of the lab - every artifact attendees would create during the session (AGENTS.md, the skill,
 both new mart models) is committed in its real project location. The user will later create a
 separate, trimmed starter branch (removing those attendee-created artifacts) to hand to
 workshop attendees. That trimming step is out of scope for this work.
@@ -25,7 +25,7 @@ workshop attendees. That trimming step is out of scope for this work.
 ## Non-goals
 
 - No changes to the slide deck or course outline docs themselves.
-- No creation of the trimmed "starter" branch — the user does this manually afterward.
+- No creation of the trimmed "starter" branch - the user does this manually afterward.
 - No changes to the underlying jaffle_shop staging models, `customers`/`orders`/`order_items`/
   `products`/`locations`/`supplies` marts, `dbt-styleguide.md`, `packages.yml`, or
   `dbt_project.yml`. These remain the foundation the new marts are built on.
@@ -41,7 +41,7 @@ workshop attendees. That trimming step is out of scope for this work.
 - `macros/customer_fields_cte.sql`
 - `analyses/troubleshooting_macro.sql`
 - `analyses/troubleshooting_sql.sql`
-- `_workshop_resources/answer_examples/` (entire folder — redundant now that finished
+- `_workshop_resources/answer_examples/` (entire folder - redundant now that finished
   artifacts live in their real locations)
 
 ### Keep unchanged
@@ -63,7 +63,7 @@ workshop attendees. That trimming step is out of scope for this work.
 
 Skill path note: the slide deck's screenshot of the recommended skill structure shows
 `.agents/skills/NAME/SKILL.md`, not `.claude/skills/`. The user confirmed both work in dbt
-platform but `.agents/` is preferred for LLM-vendor neutrality — use `.agents/skills/`.
+platform but `.agents/` is preferred for LLM-vendor neutrality - use `.agents/skills/`.
 
 ## The new mart models
 
@@ -82,21 +82,21 @@ Key design decision: compute the food/drink revenue split from `order_items` (it
 `is_food_order`/`is_drink_order` booleans. An order can contain both food and drink items, so
 summing whole `order_total` into both buckets would double-count revenue. Aggregating at the
 item level first, then joining up to `orders` (for `location_id`/`order_date`) and `locations`
-(for `location_name`) — both many-to-one joins — avoids fan-out. This double-counting trap is
+(for `location_name`) - both many-to-one joins - avoids fan-out. This double-counting trap is
 also the naive mistake Wizard's first pass is expected to make, giving Exercise 2 a concrete,
 verifiable defect to catch (not just a style nitpick).
 
 A third `other_revenue` bucket (product `type` is neither food nor drink) is included
 alongside `food_revenue`/`drink_revenue` so that `food_revenue + drink_revenue + other_revenue
 = total_revenue` holds **by construction**, regardless of what values `type` actually takes in
-the sandbox data — this was flagged in advisor review as a real risk (an equality test that
+the sandbox data - this was flagged in advisor review as a real risk (an equality test that
 depends on an unverified assumption about source data could fail live in `dbt build`), and
 the three-bucket split removes the dependency entirely rather than relying on an assumption
 about `type`.
 
 Materialized incrementally (grain: `location_id` + `order_date`, `merge` strategy, 3-day
 lookback on `order_date`) since it's a daily-grain aggregate that only grows forward. This is
-a new standard not yet in `dbt-styleguide.md` — captured in `AGENTS.md` during Exercise 3.
+a new standard not yet in `dbt-styleguide.md` - captured in `AGENTS.md` during Exercise 3.
 
 ```sql
 -- models/marts/location_performance.sql
@@ -229,7 +229,7 @@ select * from joined
 
 Note on the incremental filter: the window filter must sit on `orders` (the driving table in
 `orders_with_revenue`'s `from`), not only on `order_items`. Filtering only `order_items` was an
-earlier draft's bug — `orders` would still bring in every historical order on each incremental
+earlier draft's bug - `orders` would still bring in every historical order on each incremental
 run with a NULL join result, and `daily_location_summary` would re-emit and `merge`-overwrite
 every historical `(location_id, order_date)` row with zeroed-out revenue. Filtering both
 `orders` and `order_items` to the same window keeps the join meaningful and limits the scan on
@@ -307,18 +307,18 @@ unit_tests:
 ### `product_performance`
 
 Business ask (used verbatim as the Exercise 5 prompt): daily revenue, order count, and
-margin (item price minus supply cost) per product — a different business question that
+margin (item price minus supply cost) per product - a different business question that
 exercises the same `create-mart-model` skill and `AGENTS.md` conventions captured in
 Exercise 3, to demonstrate the pattern generalizes.
 
 The incremental filter here sits on `order_items`, which is the model's actual driving table
 (`from order_items ... left join products`), so this model doesn't have the location mart's
-filter-placement bug — filtering the driving table is correct as originally drafted.
+filter-placement bug - filtering the driving table is correct as originally drafted.
 
 The yml's model-level test asserts `total_margin <= total_revenue` rather than
 `total_revenue - total_supply_cost = total_margin`. The latter is true by construction (it's
 the same arithmetic used to derive `total_margin` in the model, so it can never fail and
-catches nothing) — flagged in advisor review as not meaningful for a workshop about
+catches nothing) - flagged in advisor review as not meaningful for a workshop about
 engineering quality. `total_margin <= total_revenue` is equivalent to asserting
 `total_supply_cost >= 0`, a real invariant about the source data that a negative supply cost
 or a future logic error could actually violate.
@@ -460,7 +460,7 @@ unit_tests:
 
 ## AGENTS.md (project root)
 
-Concise — points to the existing styleguide for general conventions rather than duplicating
+Concise - points to the existing styleguide for general conventions rather than duplicating
 it, and adds the two new project-specific patterns this lab's exercises surface.
 
 ```markdown
@@ -476,11 +476,11 @@ conventions in this project. Every new model must conform to it.
 - Before joining raw sources, check whether an existing mart or staging model already
   contains the logic you need (e.g. food/drink classification, revenue totals, customer
   lifetime metrics). Build on top of existing marts rather than re-deriving that logic from
-  raw sources — it keeps business logic defined in one place and avoids accidental
+  raw sources - it keeps business logic defined in one place and avoids accidental
   join fan-out.
 - When you do need item-level detail (for example, splitting revenue by category), aggregate
   at the most granular level first, then join the aggregate up to the coarser grain. Don't
-  join first and then aggregate — it's easy to double-count when a parent record (like an
+  join first and then aggregate - it's easy to double-count when a parent record (like an
   order) can match multiple categories.
 - Mart models with a daily or event grain that only grows forward over time (e.g. one row per
   location per day) should be materialized as `incremental`, with a `unique_key` matching the
@@ -553,28 +553,28 @@ description: Use when building a new dbt mart model in this project - covers gra
 
 Five files, each mapping to one "Practical block" from the slides / one lesson from the
 course outline. Content is written as attendee-facing instructions (these files are
-identical between this branch and the eventual trimmed starter branch — only the
+identical between this branch and the eventual trimmed starter branch - only the
 attendee-created artifacts differ between branches).
 
-- **`exercise1.md` — Build the mart.** Prompt Wizard, in the business language given above,
+- **`exercise1.md` - Build the mart.** Prompt Wizard, in the business language given above,
   to build `location_performance` with tests and docs. Emphasizes iterating with intent
   (reviewing Wizard's plan/output and asking follow-up questions) rather than accepting the
   first draft outright.
-- **`exercise2.md` — Review the changes.** Use Wizard to preview the resulting data and view
+- **`exercise2.md` - Review the changes.** Use Wizard to preview the resulting data and view
   lineage. Then manually check the model against `dbt-styleguide.md`: CTE structure/naming,
   explicit aliases, join style, whether it built on existing marts or re-joined raw sources,
   whether the food/drink split double-counts, materialization, and yml completeness. Lists
   concrete things to look for without spelling out exactly what's wrong (attendees should
   find the divergences themselves, since Wizard's actual output will vary session to
   session).
-- **`exercise3.md` — Capture your standards.** Part 1: write `AGENTS.md`. Part 2: write the
+- **`exercise3.md` - Capture your standards.** Part 1: write `AGENTS.md`. Part 2: write the
   `create-mart-model` skill. Points to the two new patterns discovered in Exercise 2
   (build-on-marts, aggregate-before-join, incremental-for-growing-grain) as the things worth
   capturing.
-- **`exercise4.md` — See the payoff, round 1.** Delete `location_performance.sql`/`.yml`,
+- **`exercise4.md` - See the payoff, round 1.** Delete `location_performance.sql`/`.yml`,
   start a new Wizard session, re-run the Exercise 1 prompt verbatim, compare against the
   Exercise 2 checklist.
-- **`exercise5.md` — Do the loop again.** New business ask (`product_performance`, given
+- **`exercise5.md` - Do the loop again.** New business ask (`product_performance`, given
   above), full prompt → review → capture(if needed) → done cycle, framed as proof the
   captured standards generalize to a new task.
 
@@ -601,7 +601,7 @@ construction (see note below).
 
 `is_food_item` and `is_drink_item` (in `stg_products.sql`) are both derived from the single
 `type` column (`type = 'jaffle'` and `type = 'beverage'` respectively), so a product can be at
-most one of the two — they can't both be true for the same row. A product whose `type` is
+most one of the two - they can't both be true for the same row. A product whose `type` is
 neither (e.g. merchandise) has both flags false; its revenue lands in `other_revenue` instead.
 With the three-bucket split, `food_revenue + drink_revenue + other_revenue = total_revenue`
 holds unconditionally, with no assumption needed about what values `type` takes in the
@@ -613,13 +613,13 @@ An advisor pass over this design (and the resulting SQL) surfaced four points, a
 follows:
 
 1. **Incremental filter placement bug (fixed).** The original draft filtered only
-   `order_items` in `location_performance`, while `orders` — the driving table for the
-   downstream join — was unfiltered. On a second incremental run this would have caused every
+   `order_items` in `location_performance`, while `orders` - the driving table for the
+   downstream join - was unfiltered. On a second incremental run this would have caused every
    historical order to re-flow through with a NULL join result, and the `merge` would have
    overwritten historical `(location_id, order_date)` rows with zeroed-out revenue. Fixed by
    filtering `orders` (the driving table) to the lookback window, and filtering `order_items`
    to the same window for consistency/performance. See the note inline after the SQL block
-   above. `product_performance` did not have this bug — `order_items` is already its driving
+   above. `product_performance` did not have this bug - `order_items` is already its driving
    table.
 2. **Data-dependent equality test (fixed).** `food_revenue + drink_revenue = total_revenue`
    would fail live in `dbt build` if the sandbox's `raw_products.type` ever contains a value
@@ -630,14 +630,14 @@ follows:
 3. **Tautological test on `product_performance` (fixed).** `total_revenue -
    total_supply_cost = total_margin` was true by construction (same arithmetic as the
    model) and could never fail. Replaced with `total_margin <= total_revenue`, equivalent to
-   asserting `total_supply_cost >= 0` — an invariant about the source data that could
+   asserting `total_supply_cost >= 0` - an invariant about the source data that could
    actually be violated.
 4. **Unit tests on incremental models (fixed).** Both new models' `unit_tests` now set
    `overrides: macros: is_incremental: false`, since dbt evaluates unit tests against a model
    that doesn't have an existing target relation to check `is_incremental()` against.
 5. **Whether Wizard's first pass will actually diverge from project conventions (open,
    cannot be verified from this environment).** The lab's Exercises 2-4 depend on Wizard's
-   first output having *some* real gap for attendees to find — not a specific, predetermined
+   first output having *some* real gap for attendees to find - not a specific, predetermined
    one, since Wizard's actual output will vary by session (the exercises are already written
    to say "find whatever gaps exist" rather than listing a fixed checklist, which absorbs
    some of this risk). But if Wizard's first pass turns out to already conform closely (either
@@ -645,13 +645,13 @@ follows:
    `dbt-styleguide.md` as ambient context even though slide 32 only lists `AGENTS.md`,
    `AGENTS.override.md`, `CLAUDE.md`, and `.claude/CLAUDE.md` as auto-read files), the
    "divergence to catch" premise weakens. **This can only be tested by actually running
-   Exercise 1's prompt against the dbt Studio sandbox** — recommend doing that dry run before
+   Exercise 1's prompt against the dbt Studio sandbox** - recommend doing that dry run before
    finalizing exercise wording, and if Wizard conforms too well, consider under-specifying
    the Exercise 1 prompt further and/or moving `dbt-styleguide.md` under
    `_workshop_resources/` as a hedge.
 
 Also noted, outside this repo's scope: slide 7's registration passcode is `Coalesce2025!` and
-slides 5/15 have `TBD` placeholders — worth flagging to the deck owner given "Coalesce" is
+slides 5/15 have `TBD` placeholders - worth flagging to the deck owner given "Coalesce" is
 retired as a brand term as of 2026-01-31, but not something this repo's README should
 reference (the README uses a placeholder for registration details rather than a hardcoded
 passcode).

@@ -1,41 +1,24 @@
-# Exercise 4 - Troubleshooting SQL
+# Exercise 4 - See the payoff, round 1
 
-1. Open `analyses/troubleshooting_sql.sql`
-   
-2. Click Preview to run the query and observe the error
-   
-3. Open dbt Copilot SQL window
-   
-4. Ask Copilot about the error.
-<ul> 
-This SQL query is generating an error:
-[INVENTORY.COMPANY] is not a valid group by expression.
-Can you find the problem with the syntax? 
-</ul>
+Practical block #4: delete the mart and rebuild it from scratch, now that your standards are
+captured, and compare against what you found in Exercise 2.
 
-5. Revise the code based on Copilot's suggestion
-and click Preview again
-   
-6. The query works but it isn't returning any rows.
+1. Delete `models/marts/location_performance.sql` and `models/marts/location_performance.yml`.
 
-7. Ask Copilot to determine why
+2. Start a brand new dbt Wizard session (a fresh chat, so nothing from the earlier
+   conversation is still in context).
+
+3. Use the exact same prompt from Exercise 1:
+
 <ul>
-I expect this query to return data, but it is returning 0 rows. Why?
+Our store managers want a daily view of how each location is performing:
+total revenue, number of orders, and how much of that revenue comes from
+food vs. drinks. Can you build us a model for that, with tests and docs?
 </ul>
 
-8. Revise the code based on Copilot's suggestion
-and click Preview again
+4. Compare the result against your Exercise 2 findings. Did Wizard build on existing marts
+   this time? Does the food/drink split avoid double-counting? Is materialization handled
+   correctly? Does the YAML meet the bar you set?
 
-9. The query now returns rows, but you notice that the
-total revenue field is inaccurate.
-
-10. Ask Copilot to determine why
-<ul>
-The values in the total_revenue field are inaccurate,
-can you determine the cause?
-</ul>
-
-11. Revise the code based on Copilot's suggestion
-and click Preview again
-
-12. Save the sql file
+5. If anything still isn't right, that's useful signal too - it means your `AGENTS.md` or
+   skill needs to be more specific. Refine it and try again.

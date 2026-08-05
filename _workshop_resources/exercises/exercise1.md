@@ -1,41 +1,26 @@
-# Exercise 1 - SQL Prompting
+# Exercise 1 - Build a mart with dbt Wizard
 
-1. Open `models/copilot_workshop/recreate_customers.sql`
+Practical block #1: create a new mart model, with tests and docs, by prompting the feature
+request in plain business terms.
 
-2. Open dbt Copilot SQL
-   
-3. Enter prompt
+1. In dbt Studio, open a new dbt Wizard chat.
+
+2. Prompt Wizard with the business request below. Don't add implementation detail (naming,
+   materialization, which upstream models to use) - the point of this exercise is to see what
+   Wizard does with a plain-language ask, before you've captured any project standards.
+
 <ul>
-Bring in the `@stg_customers`, `@orders`, and `@order_items` 
-models in CTE’s. Name the CTE’s customers, orders, and order items.
+Our store managers want a daily view of how each location is performing:
+total revenue, number of orders, and how much of that revenue comes from
+food vs. drinks. Can you build us a model for that, with tests and docs?
 </ul>
 
-4. Enter a second prompt to revise
-<ul>
-Add another CTE called `order_summary` that selects from the `orders` CTE 
-and joins to the `order_items` CTE on `order_id`. Include the `customer_id` field.   
-I want to see the following summary fields: count of lifetime orders, 
-the first order date, the last order date, 
-the sum of product price as lifetime_spend_pretax, 
-and the sum of order_total as lifetime_spend.
-</ul>
+3. Let Wizard investigate the project, propose a plan, and build. Wizard validates as it
+   builds, so a working, built model is the normal outcome here - not a separate step.
 
-5. Enter a third prompt
-<ul>
-Join the `order_summary` CTE to the `customers` CTE using `customer_id`.  
-Select columns explicitly from each CTE in a new CTE named `final`.  
-Add a case statement to the final CTE that refers to a customer as ‘current’ 
-if they have ordered in the last year and ‘inactive’ if they have not.  
-Add a select statement to select all from the `final` CTE.
-</ul>
+4. Don't just accept the first result. If something about Wizard's plan or output seems off,
+   or you want to see an alternative, ask a follow-up question before moving on. Iterating
+   with intent is the point of this exercise, not speed.
 
-6. Review generated output and click "Add" button to populate code in your sql file.
-
-7. Save the `models/copilot_workshop/recreate_customers.sql` file
-   
-7. OPTIONAL: Enter a final prompt as a preview for the next exercise.
-<ul>
-Create a source to target mapping spreadsheet from this model.  
-Include a column that defines the transformation applied.
-Describe the join logic.
-</ul>
+5. Once you have a model you're reasonably happy with, save it and move on to Exercise 2 -
+   you'll review it more closely there.
