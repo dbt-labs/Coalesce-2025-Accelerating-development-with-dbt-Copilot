@@ -82,10 +82,17 @@ Key design decision: compute the food/drink revenue split from `order_items` (it
 `is_food_order`/`is_drink_order` booleans. An order can contain both food and drink items, so
 summing whole `order_total` into both buckets would double-count revenue. Aggregating at the
 item level first, then joining up to `orders` (for `location_id`/`order_date`) and `locations`
-(for `location_name`) — both many-to-one joins — avoids fan-out and produces a `food_revenue +
-drink_revenue = total_revenue` identity that can be asserted as a test. This double-counting
-trap is also the naive mistake Wizard's first pass is expected to make, giving Exercise 2 a
-concrete, verifiable defect to catch (not just a style nitpick).
+(for `location_name`) — both many-to-one joins — avoids fan-out. This double-counting trap is
+also the naive mistake Wizard's first pass is expected to make, giving Exercise 2 a concrete,
+verifiable defect to catch (not just a style nitpick).
+
+A third `other_revenue` bucket (product `type` is neither food nor drink) is included
+alongside `food_revenue`/`drink_revenue` so that `food_revenue + drink_revenue + other_revenue
+= total_revenue` holds **by construction**, regardless of what values `type` actually takes in
+the sandbox data — this was flagged in advisor review as a real risk (an equality test that
+depends on an unverified assumption about source data could fail live in `dbt build`), and
+the three-bucket split removes the dependency entirely rather than relying on an assumption
+about `type`.
 
 Materialized incrementally (grain: `location_id` + `order_date`, `merge` strategy, 3-day
 lookback on `order_date`) since it's a daily-grain aggregate that only grows forward. This is
@@ -103,9 +110,9 @@ a new standard not yet in `dbt-styleguide.md` — captured in `AGENTS.md` during
 
 with
 
-order_items as (
+orders as (
 
-    select * from {{ ref('order_items') }}
+    select * from {{ ref('orders') }}
 
     {% if is_incremental() %}
     where order_date >= (select dateadd(day, -3, max(order_date)) from {{ this }})
@@ -113,9 +120,13 @@ order_items as (
 
 ),
 
-orders as (
+order_items as (
 
-    select * from {{ ref('orders') }}
+    select * from {{ ref('order_items') }}
+
+    {% if is_incremental() %}
+    where order_date >= (select dateadd(day, -3, max(order_date)) from {{ this }})
+    {% endif %}
 
 ),
 
@@ -142,7 +153,13 @@ order_items_revenue as (
                 when is_drink_item then product_price
                 else 0
             end
-        ) as drink_revenue
+        ) as drink_revenue,
+        sum(
+            case
+                when not is_food_item and not is_drink_item then product_price
+                else 0
+            end
+        ) as other_revenue
 
     from order_items
 
@@ -159,7 +176,8 @@ orders_with_revenue as (
 
         order_items_revenue.total_revenue,
         order_items_revenue.food_revenue,
-        order_items_revenue.drink_revenue
+        order_items_revenue.drink_revenue,
+        order_items_revenue.other_revenue
 
     from orders
 
@@ -177,7 +195,8 @@ daily_location_summary as (
         count(distinct order_id) as count_orders,
         sum(total_revenue) as total_revenue,
         sum(food_revenue) as food_revenue,
-        sum(drink_revenue) as drink_revenue
+        sum(drink_revenue) as drink_revenue,
+        sum(other_revenue) as other_revenue
 
     from orders_with_revenue
 
@@ -195,7 +214,8 @@ joined as (
         daily_location_summary.count_orders,
         daily_location_summary.total_revenue,
         daily_location_summary.food_revenue,
-        daily_location_summary.drink_revenue
+        daily_location_summary.drink_revenue,
+        daily_location_summary.other_revenue
 
     from daily_location_summary
 
@@ -207,6 +227,14 @@ joined as (
 select * from joined
 ```
 
+Note on the incremental filter: the window filter must sit on `orders` (the driving table in
+`orders_with_revenue`'s `from`), not only on `order_items`. Filtering only `order_items` was an
+earlier draft's bug — `orders` would still bring in every historical order on each incremental
+run with a NULL join result, and `daily_location_summary` would re-emit and `merge`-overwrite
+every historical `(location_id, order_date)` row with zeroed-out revenue. Filtering both
+`orders` and `order_items` to the same window keeps the join meaningful and limits the scan on
+both sides.
+
 ```yaml
 # models/marts/location_performance.yml
 models:
@@ -214,7 +242,7 @@ models:
     description: Daily performance summary per location, offering total revenue, order count, and a food vs. drink revenue split. One row per location per day.
     data_tests:
       - dbt_utils.expression_is_true:
-          expression: "food_revenue + drink_revenue = total_revenue"
+          expression: "food_revenue + drink_revenue + other_revenue = total_revenue"
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - location_id
@@ -241,11 +269,16 @@ models:
         description: The portion of total_revenue attributable to food items.
       - name: drink_revenue
         description: The portion of total_revenue attributable to drink items.
+      - name: other_revenue
+        description: The portion of total_revenue attributable to items that are neither food nor drink.
 
 unit_tests:
   - name: test_food_and_drink_revenue_split_correctly
-    description: "Test that item-level revenue is split into food/drink buckets without double-counting an order that contains both."
+    description: "Test that item-level revenue is split into food/drink/other buckets without double-counting an order that contains both."
     model: location_performance
+    overrides:
+      macros:
+        is_incremental: false
     given:
       - input: ref('order_items')
         rows:
@@ -267,6 +300,7 @@ unit_tests:
             total_revenue: 8.00,
             food_revenue: 5.00,
             drink_revenue: 3.00,
+            other_revenue: 0.00,
           }
 ```
 
@@ -276,6 +310,18 @@ Business ask (used verbatim as the Exercise 5 prompt): daily revenue, order coun
 margin (item price minus supply cost) per product — a different business question that
 exercises the same `create-mart-model` skill and `AGENTS.md` conventions captured in
 Exercise 3, to demonstrate the pattern generalizes.
+
+The incremental filter here sits on `order_items`, which is the model's actual driving table
+(`from order_items ... left join products`), so this model doesn't have the location mart's
+filter-placement bug — filtering the driving table is correct as originally drafted.
+
+The yml's model-level test asserts `total_margin <= total_revenue` rather than
+`total_revenue - total_supply_cost = total_margin`. The latter is true by construction (it's
+the same arithmetic used to derive `total_margin` in the model, so it can never fail and
+catches nothing) — flagged in advisor review as not meaningful for a workshop about
+engineering quality. `total_margin <= total_revenue` is equivalent to asserting
+`total_supply_cost >= 0`, a real invariant about the source data that a negative supply cost
+or a future logic error could actually violate.
 
 ```sql
 -- models/marts/product_performance.sql
@@ -353,7 +399,7 @@ models:
     description: Daily performance summary per product, offering revenue, items sold, and margin (item price minus supply cost). One row per product per day.
     data_tests:
       - dbt_utils.expression_is_true:
-          expression: "total_revenue - total_supply_cost = total_margin"
+          expression: "total_margin <= total_revenue"
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - product_id
@@ -387,6 +433,9 @@ unit_tests:
   - name: test_margin_computes_correctly
     description: "Test that margin is revenue minus supply cost."
     model: product_performance
+    overrides:
+      macros:
+        is_incremental: false
     given:
       - input: ref('order_items')
         rows:
@@ -553,7 +602,56 @@ construction (see note below).
 `is_food_item` and `is_drink_item` (in `stg_products.sql`) are both derived from the single
 `type` column (`type = 'jaffle'` and `type = 'beverage'` respectively), so a product can be at
 most one of the two — they can't both be true for the same row. A product whose `type` is
-neither (e.g. merchandise) has both flags false and contributes to `total_revenue` without
-landing in `food_revenue` or `drink_revenue`. That's expected: the `food_revenue +
-drink_revenue = total_revenue` test only needs "every food/drink dollar lands in exactly one
-bucket," not "every product is food or drink," and it holds under the current source data.
+neither (e.g. merchandise) has both flags false; its revenue lands in `other_revenue` instead.
+With the three-bucket split, `food_revenue + drink_revenue + other_revenue = total_revenue`
+holds unconditionally, with no assumption needed about what values `type` takes in the
+sandbox data.
+
+## Risks flagged in advisor review
+
+An advisor pass over this design (and the resulting SQL) surfaced four points, addressed as
+follows:
+
+1. **Incremental filter placement bug (fixed).** The original draft filtered only
+   `order_items` in `location_performance`, while `orders` — the driving table for the
+   downstream join — was unfiltered. On a second incremental run this would have caused every
+   historical order to re-flow through with a NULL join result, and the `merge` would have
+   overwritten historical `(location_id, order_date)` rows with zeroed-out revenue. Fixed by
+   filtering `orders` (the driving table) to the lookback window, and filtering `order_items`
+   to the same window for consistency/performance. See the note inline after the SQL block
+   above. `product_performance` did not have this bug — `order_items` is already its driving
+   table.
+2. **Data-dependent equality test (fixed).** `food_revenue + drink_revenue = total_revenue`
+   would fail live in `dbt build` if the sandbox's `raw_products.type` ever contains a value
+   other than `'jaffle'`/`'beverage'`, which could not be verified from this environment
+   (no warehouse access). Fixed by adding an `other_revenue` bucket so the identity holds
+   unconditionally, removing the dependency on unverified source data rather than asserting
+   it holds.
+3. **Tautological test on `product_performance` (fixed).** `total_revenue -
+   total_supply_cost = total_margin` was true by construction (same arithmetic as the
+   model) and could never fail. Replaced with `total_margin <= total_revenue`, equivalent to
+   asserting `total_supply_cost >= 0` — an invariant about the source data that could
+   actually be violated.
+4. **Unit tests on incremental models (fixed).** Both new models' `unit_tests` now set
+   `overrides: macros: is_incremental: false`, since dbt evaluates unit tests against a model
+   that doesn't have an existing target relation to check `is_incremental()` against.
+5. **Whether Wizard's first pass will actually diverge from project conventions (open,
+   cannot be verified from this environment).** The lab's Exercises 2-4 depend on Wizard's
+   first output having *some* real gap for attendees to find — not a specific, predetermined
+   one, since Wizard's actual output will vary by session (the exercises are already written
+   to say "find whatever gaps exist" rather than listing a fixed checklist, which absorbs
+   some of this risk). But if Wizard's first pass turns out to already conform closely (either
+   because it infers style well from the surrounding marts, or because it reads
+   `dbt-styleguide.md` as ambient context even though slide 32 only lists `AGENTS.md`,
+   `AGENTS.override.md`, `CLAUDE.md`, and `.claude/CLAUDE.md` as auto-read files), the
+   "divergence to catch" premise weakens. **This can only be tested by actually running
+   Exercise 1's prompt against the dbt Studio sandbox** — recommend doing that dry run before
+   finalizing exercise wording, and if Wizard conforms too well, consider under-specifying
+   the Exercise 1 prompt further and/or moving `dbt-styleguide.md` under
+   `_workshop_resources/` as a hedge.
+
+Also noted, outside this repo's scope: slide 7's registration passcode is `Coalesce2025!` and
+slides 5/15 have `TBD` placeholders — worth flagging to the deck owner given "Coalesce" is
+retired as a brand term as of 2026-01-31, but not something this repo's README should
+reference (the README uses a placeholder for registration details rather than a hardcoded
+passcode).
