@@ -3,19 +3,22 @@ models:
     description: Daily performance summary per product, offering revenue, items sold, and margin (item price minus supply cost). One row per product per day.
     data_tests:
       - dbt_utils.expression_is_true:
-          expression: "total_margin <= total_revenue"
+          arguments:
+            expression: "total_margin <= total_revenue"
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - product_id
-            - order_date
+          arguments:
+            combination_of_columns:
+              - product_id
+              - order_date
     columns:
       - name: product_id
         description: The foreign key relating to the product this summary row is for.
         data_tests:
           - not_null
           - relationships:
-              to: ref('products')
-              field: product_id
+              arguments:
+                to: ref('products')
+                field: product_id
       - name: product_name
         description: The name of the product.
       - name: order_date
@@ -43,20 +46,11 @@ unit_tests:
     given:
       - input: ref('order_items')
         rows:
-          - { order_id: 1, order_item_id: 1, product_id: 1, order_date: "2026-01-01", product_price: 5.00, supply_cost: 2.00 }
-          - { order_id: 2, order_item_id: 2, product_id: 1, order_date: "2026-01-01", product_price: 5.00, supply_cost: 2.00 }
+          - {order_id: 1, order_item_id: 1, product_id: 1, order_date: "2026-01-01", product_price: 5.00, supply_cost: 2.00}
+          - {order_id: 2, order_item_id: 2, product_id: 1, order_date: "2026-01-01", product_price: 5.00, supply_cost: 2.00}
       - input: ref('products')
         rows:
-          - { product_id: 1, product_name: "Nutellaphone" }
+          - {product_id: 1, product_name: "Nutellaphone"}
     expect:
       rows:
-        - {
-            product_id: 1,
-            product_name: "Nutellaphone",
-            order_date: "2026-01-01",
-            count_orders: 2,
-            count_items_sold: 2,
-            total_revenue: 10.00,
-            total_supply_cost: 4.00,
-            total_margin: 6.00,
-          }
+        - {product_id: 1, product_name: "Nutellaphone", order_date: "2026-01-01", count_orders: 2, count_items_sold: 2, total_revenue: 10.00, total_supply_cost: 4.00, total_margin: 6.00}

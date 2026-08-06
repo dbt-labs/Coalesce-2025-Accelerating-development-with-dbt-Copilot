@@ -3,19 +3,22 @@ models:
     description: Daily performance summary per location, offering total revenue, order count, and a food vs. drink revenue split. One row per location per day.
     data_tests:
       - dbt_utils.expression_is_true:
-          expression: "food_revenue + drink_revenue + other_revenue = total_revenue"
+          arguments:
+            expression: "food_revenue + drink_revenue + other_revenue = total_revenue"
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - location_id
-            - order_date
+          arguments:
+            combination_of_columns:
+              - location_id
+              - order_date
     columns:
       - name: location_id
         description: The foreign key relating to the location this summary row is for.
         data_tests:
           - not_null
           - relationships:
-              to: ref('locations')
-              field: location_id
+              arguments:
+                to: ref('locations')
+                field: location_id
       - name: location_name
         description: The name of the location.
       - name: order_date
@@ -43,23 +46,14 @@ unit_tests:
     given:
       - input: ref('order_items')
         rows:
-          - { order_id: 1, order_item_id: 1, product_price: 5.00, is_food_item: true, is_drink_item: false }
-          - { order_id: 1, order_item_id: 2, product_price: 3.00, is_food_item: false, is_drink_item: true }
+          - {order_id: 1, order_item_id: 1, product_price: 5.00, is_food_item: true, is_drink_item: false}
+          - {order_id: 1, order_item_id: 2, product_price: 3.00, is_food_item: false, is_drink_item: true}
       - input: ref('orders')
         rows:
-          - { order_id: 1, location_id: 1, order_date: "2026-01-01" }
+          - {order_id: 1, location_id: 1, order_date: "2026-01-01"}
       - input: ref('locations')
         rows:
-          - { location_id: 1, location_name: "Vice City" }
+          - {location_id: 1, location_name: "Vice City"}
     expect:
       rows:
-        - {
-            location_id: 1,
-            location_name: "Vice City",
-            order_date: "2026-01-01",
-            count_orders: 1,
-            total_revenue: 8.00,
-            food_revenue: 5.00,
-            drink_revenue: 3.00,
-            other_revenue: 0.00,
-          }
+        - {location_id: 1, location_name: "Vice City", order_date: "2026-01-01", count_orders: 1, total_revenue: 8.00, food_revenue: 5.00, drink_revenue: 3.00, other_revenue: 0.00}

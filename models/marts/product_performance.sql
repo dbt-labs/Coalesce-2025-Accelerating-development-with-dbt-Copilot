@@ -13,7 +13,10 @@ order_items as (
     select * from {{ ref('order_items') }}
 
     {% if is_incremental() %}
-    where order_date >= (select dateadd(day, -3, max(order_date)) from {{ this }})
+    where order_date >= (
+        select coalesce(dateadd(day, -3, max(order_date)), '1900-01-01'::date)
+        from {{ this }}
+    )
     {% endif %}
 
 ),
