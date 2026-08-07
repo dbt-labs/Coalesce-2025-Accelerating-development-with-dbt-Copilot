@@ -37,7 +37,12 @@ Show me the lineage for location_performance, including column-level lineage.
      detail, check whether `food_revenue + drink_revenue` could ever double-count an order's
      `total_revenue`.
    - **Materialization** - this mart grows by one row per location per day. Is it just a
-     `table`, or did Wizard reach for something that handles that growth pattern?
+     `table`, or did Wizard reach for something that handles that growth pattern (e.g.
+     `incremental`)? If it went incremental, check the lookback filter specifically: does it
+     handle the case where the target table is empty (its first-ever build)? A filter like
+     `where order_date >= (select dateadd(day, -3, max(order_date)) from {{ this }})` returns
+     `NULL` when `{{ this }}` is empty, which silently excludes every row instead of loading
+     anything - a real, easy-to-miss bug, not just a style issue.
    - **YAML completeness** - model description, a description on every column, at least one
      model-level test, at least one unit test?
 

@@ -11,6 +11,10 @@ number of orders, and margin (item price minus supply cost) for each
 product. Can you build us a model for that, with tests and docs?
 </ul>
 
+   This is the first time `product_performance` is built. If it comes back incremental with a
+   unit test and the build fails on a schema-introspection error, that's the same bootstrap
+   step from Exercise 1: run `dbt run --empty --select product_performance`, then build again.
+
 2. Review the output the same way you did in Exercise 2: preview the data, check the
    lineage, and compare it against `dbt-styleguide.md` and your `AGENTS.md`.
 

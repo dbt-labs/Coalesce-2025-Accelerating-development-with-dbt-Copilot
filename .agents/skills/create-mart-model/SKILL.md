@@ -31,6 +31,11 @@ description: Use when building a new dbt mart model in this project - covers gra
      just one of them. If the model joins two or more sources to build its grain, filtering
      only one side leaves the other side unfiltered on incremental runs, which can cause
      `merge` to overwrite historical rows with incomplete data.
+   - the lookback bound wrapped in `coalesce(..., '<a safe early date>')`, e.g.
+     `coalesce(dateadd(day, -3, max(order_date)), '1900-01-01'::date)`. Without this,
+     `max(order_date)` against an **empty** target relation (the model's first-ever build, or
+     right after `dbt run --empty`) returns `NULL`, the filter excludes every row, and the
+     model silently stays empty forever instead of doing a full load.
 
    If the grain is fixed (one row per a dimension that doesn't grow, like one row per
    customer or product), leave it `table`-materialized (the project default for marts).
@@ -51,7 +56,15 @@ description: Use when building a new dbt mart model in this project - covers gra
      test, since dbt evaluates unit tests without an existing target relation to check
      `is_incremental()` against.
 
-7. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
+7. **First build of an incremental model with a unit test: bootstrap it.** dbt needs to
+   introspect the target relation's column types to validate a unit test's `expect` block. On
+   the very first build, that relation doesn't exist yet, so `dbt build` fails with a
+   schema-introspection error on the unit test - this is a known dbt limitation, not a bug in
+   your model. Fix: run `dbt run --empty --select <model_name>` once to create the (empty)
+   relation, then run `dbt build` normally. You only need to do this once per model, or again
+   after dropping/recreating the table from scratch.
+
+8. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
    passes its tests before considering the model done. If the model is incremental, run it
    twice in a row and confirm row counts and historical values are unchanged after the second
    run - a filter that only covers part of the grain won't show up as a failure on the first

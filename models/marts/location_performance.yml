@@ -34,7 +34,7 @@ models:
       - name: drink_revenue
         description: The portion of total_revenue attributable to drink items.
       - name: other_revenue
-        description: The portion of total_revenue attributable to items that are neither food nor drink.
+        description: The portion of total_revenue attributable to items that are neither food nor drink. Always 0 today, since every product in this dataset is classified as either food or drink - kept so the model doesn't silently misclassify revenue if a non-food/drink product type is ever added.
 
 unit_tests:
   - name: test_food_and_drink_revenue_split_correctly

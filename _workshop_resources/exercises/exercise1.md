@@ -18,6 +18,14 @@ food vs. drinks. Can you build us a model for that, with tests and docs?
 3. Let Wizard investigate the project, propose a plan, and build. Wizard validates as it
    builds, so a working, built model is the normal outcome here - not a separate step.
 
+   **If the first build fails** with an error about not being able to fetch/introspect the
+   schema for a unit test, don't treat that as a broken model. If Wizard materialized this as
+   an `incremental` model and also wrote a unit test for it, dbt needs the target table to
+   already exist to check the unit test's `expect` block against - and on a brand-new model,
+   it doesn't exist yet. This is a known dbt limitation, not something wrong with the SQL.
+   Ask Wizard to run `dbt run --empty --select <model_name>` once to create an empty version
+   of the table, then build again.
+
 4. Don't just accept the first result. If something about Wizard's plan or output seems off,
    or you want to see an alternative, ask a follow-up question before moving on. Iterating
    with intent is the point of this exercise, not speed.
