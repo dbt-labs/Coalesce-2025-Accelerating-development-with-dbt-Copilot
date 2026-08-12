@@ -36,3 +36,12 @@
 - Indents should be two spaces
 - List items should be indented
 - Use a new line to separate list items that are dictionaries where appropriate
+
+## Mart model requirements
+
+- Every mart model must set `config.meta.owner` and `config.group` in its yml, identifying
+  the team that owns it. See `models/marts/_groups.yml` for the group definition and any
+  existing mart's yml for the pattern.
+- Transactional, append-mostly models (one row per event, e.g. `orders`) should be
+  materialized as `incremental`, not `table`. See `models/marts/orders.sql` for the reference
+  implementation.

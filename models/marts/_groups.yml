@@ -1,0 +1,5 @@
+groups:
+  - name: analytics_engineering
+    owner:
+      name: Analytics Engineering
+      email: analytics-engineering@jaffle-shop.com
