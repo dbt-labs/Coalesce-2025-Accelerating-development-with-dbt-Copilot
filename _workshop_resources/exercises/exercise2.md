@@ -37,11 +37,6 @@ Show me the lineage for location_performance, including column-level lineage.
    - **What happens before the final grouping** - trace exactly what gets joined to what, and
      in what order, relative to when aggregation happens. Compare that structure to how the
      project's other marts are built, not just whether the numbers come out right.
-   - **Every join's failure mode** - for each join in the model, ask what happens to a row on
-     one side if there's no match on the other. Does that choice match how the rest of the
-     project handles the same situation?
-   - **The food/drink revenue split specifically** - an order can contain both food and drink
-     items. Check whether the split could ever double-count an order's revenue.
    - **Materialization, and what would happen on a second run** - does this mart's
      materialization match how the project handles similar data elsewhere? If it's more
      sophisticated than a plain table, don't just confirm it builds once - think through (or
