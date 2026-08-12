@@ -1,0 +1,65 @@
+models:
+  # INSTRUCTOR EXAMPLE ONLY - deliberately violates every standard in AGENTS.md/SKILL.md.
+  # VIOLATION: no config.meta.owner / config.group, unlike every other mart in this project.
+  # VIOLATION: no model-level data_tests entry at all - only column-level tests below.
+  - name: location_performance_worst_case_example
+    description: >
+      Illustrative example only - deliberately violates every standard captured in
+      AGENTS.md and SKILL.md, for use as a teaching example in Exercise 2/3 discussions.
+      Not a real mart. One row per location and order date.
+    columns:
+      - name: location_performance_worst_case_example_id
+        description: Surrogate key for the location and order-date grain.
+        data_tests:
+          - not_null
+          - unique
+      - name: location_id
+        description: The location this row summarizes.
+        data_tests:
+          - not_null
+      - name: location_name
+        description: The name of the location.
+      - name: order_date
+        description: The date this row summarizes.
+        data_tests:
+          - not_null
+      - name: order_count
+        description: The number of orders placed at this location on this date.
+      - name: total_revenue
+        # VIOLATION: no mention that this double-counts multi-item orders, or that it's
+        # on a different (tax-inclusive) basis than food_revenue/drink_revenue below.
+        description: The total revenue for this location and date.
+      - name: food_revenue
+        description: The portion of revenue from food items.
+      - name: drink_revenue
+        description: The portion of revenue from drink items.
+
+unit_tests:
+  - name: test_location_performance_worst_case_example_aggregates_correctly
+    description: >
+      This test passes - but its expected values were derived from the model's own
+      (buggy) output, not independently verified arithmetic. That's the point: a
+      passing unit test doesn't mean the business logic is right, only that the SQL is
+      internally consistent with itself. total_revenue below is inflated - order 1 has
+      two items, so its order_total (13.20) is counted twice (26.40) instead of once,
+      plus order 2's 6.60, for 33.00 instead of the correct 19.80.
+    model: location_performance_worst_case_example
+    overrides:
+      macros:
+        is_incremental: false
+    given:
+      - input: ref('orders')
+        rows:
+          - {order_id: 1, location_id: 10, order_date: '2025-01-01', order_total: 13.20}
+          - {order_id: 2, location_id: 10, order_date: '2025-01-01', order_total: 6.60}
+      - input: ref('order_items')
+        rows:
+          - {order_id: 1, product_price: 10.00, is_food_item: true, is_drink_item: false}
+          - {order_id: 1, product_price: 2.00, is_food_item: false, is_drink_item: true}
+          - {order_id: 2, product_price: 5.00, is_food_item: true, is_drink_item: false}
+      - input: ref('locations')
+        rows:
+          - {location_id: 10, location_name: "Vice City"}
+    expect:
+      rows:
+        - {location_id: 10, location_name: "Vice City", order_date: '2025-01-01', order_count: 2, total_revenue: 33.00, food_revenue: 15.00, drink_revenue: 2.00}
