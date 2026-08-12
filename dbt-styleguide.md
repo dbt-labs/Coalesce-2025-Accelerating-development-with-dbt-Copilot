@@ -4,6 +4,7 @@
 - Do not use abbreviations when naming fields. Emphasize readability over brevity. For example, do not use `cust` for `customer` or `o` for `orders`.
 - Avoid reserved words as column names.
 - Booleans should be prefixed with `is_` or `has_`.
+- Counts should be prefixed with `count_` (for example, `count_orders`), not suffixed (avoid `orders_count`).
 - Timestamp columns should be named `<event>_at`(for example, `created_at`) and should be in UTC. If a different timezone is used, this should be indicated with a suffix (`created_at_pt`).
 - Dates should be named `<event>_date`. For example, `created_date.`
 - Table, CTE, and column names should be written in `snake_case`.

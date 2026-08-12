@@ -1,9 +1,9 @@
 with
 
-locations as (
+final as (
 
     select * from {{ ref('stg_locations') }}
 
 )
 
-select * from locations
+select * from final
