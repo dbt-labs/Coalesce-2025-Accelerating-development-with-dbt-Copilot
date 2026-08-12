@@ -1,7 +1,7 @@
 {{
     config(
         materialized='incremental',
-        unique_key=['product_id', 'order_date'],
+        unique_key='product_performance_key',
         incremental_strategy='merge'
     )
 }}
@@ -48,6 +48,8 @@ daily_product_summary as (
 joined as (
 
     select
+        {{ dbt_utils.generate_surrogate_key(['daily_product_summary.product_id', 'daily_product_summary.order_date']) }}
+            as product_performance_key,
         daily_product_summary.product_id,
         products.product_name,
         daily_product_summary.order_date,

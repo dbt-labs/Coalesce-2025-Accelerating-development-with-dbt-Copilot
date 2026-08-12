@@ -64,13 +64,16 @@ description: Use when building a new dbt mart model in this project - covers gra
    Either compute that column from an unfiltered ref, or drop it if nothing downstream depends
    on it - don't leave it computed against the filtered CTE.
 
-7. **If the grain has no single natural key, generate a surrogate key - the same way every
-   time.** Use `{{ dbt_utils.generate_surrogate_key([...]) }}` built from the grain's columns
-   in the same order they're grouped by, and name the resulting column `<model_name>_key`
-   (e.g. `location_performance.sql` produces `location_performance_key`) - always ending in
-   `_key`, never `_id`, to distinguish a generated key from a natural primary key (which is
-   always `<object>_id`). This project has no tolerance for inventing a new naming pattern
-   per model - use this one.
+7. **Every model needs an actual single-column primary key - if the grain has no single
+   natural key, generate a surrogate key, the same way every time.** Use
+   `{{ dbt_utils.generate_surrogate_key([...]) }}` built from the grain's columns in the same
+   order they're grouped by, and name the resulting column `<model_name>_key` (e.g.
+   `location_performance.sql` produces `location_performance_key`) - always ending in `_key`,
+   never `_id`, to distinguish a generated key from a natural primary key (which is always
+   `<object>_id`). Testing that a combination of columns is unique
+   (`dbt_utils.unique_combination_of_columns`) is not a substitute for this - it doesn't give
+   the model an actual primary key column. This project has no tolerance for inventing a new
+   naming pattern per model, or skipping the key entirely - use this one, every time.
 
 8. **Write the SQL to match project style.** Follow `dbt-styleguide.md`. Counts are named
    `count_<noun>`, never `<noun>_count`.

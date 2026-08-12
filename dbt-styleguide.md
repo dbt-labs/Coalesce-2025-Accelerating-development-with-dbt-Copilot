@@ -1,6 +1,11 @@
 ## Naming fields and tables
 
-- The primary key of a model should be named `<object>_id`, for example, `account_id`.
+- Every model must have a single-column primary key. If the grain has a natural single
+  column key, name it `<object>_id` (for example, `account_id`). If the grain has no natural
+  single-column key (for example, a grain of one row per location per day), generate a
+  surrogate key - see below. Testing uniqueness across a combination of columns (e.g.
+  `dbt_utils.unique_combination_of_columns`) is not a substitute for having an actual primary
+  key column; every model needs one either way.
 - Counts should be prefixed with `count_` (for example, `count_orders`), not suffixed (avoid `orders_count`).
 - Surrogate/generated keys (for example, keys built with `dbt_utils.generate_surrogate_key`) should always be named `<model_name>_key` (for example, `location_performance_key`), not `<model_name>_id`. This distinguishes a generated key from a natural primary key, which is always named `<object>_id`.
 

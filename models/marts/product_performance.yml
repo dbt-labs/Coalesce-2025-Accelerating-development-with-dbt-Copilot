@@ -9,12 +9,12 @@ models:
       - dbt_utils.expression_is_true:
           arguments:
             expression: "total_margin <= total_revenue"
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns:
-              - product_id
-              - order_date
     columns:
+      - name: product_performance_key
+        description: Surrogate primary key, generated from product_id and order_date.
+        data_tests:
+          - not_null
+          - unique
       - name: product_id
         description: The foreign key relating to the product this summary row is for.
         data_tests:

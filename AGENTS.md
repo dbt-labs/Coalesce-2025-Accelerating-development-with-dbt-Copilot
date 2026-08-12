@@ -38,15 +38,17 @@ observed to get missed:
   join first and then aggregate - it's easy to double-count when a parent record (like an
   order) can match multiple categories, and even when it doesn't cause a bug, pre-aggregating
   first is a required pattern here (see "SQL style" above).
-- **Surrogate keys: use this exact pattern, every time, so it stops varying run to run.** If
-  a mart's grain has no single natural key (e.g. one row per location per day), generate a
-  surrogate key with `{{ dbt_utils.generate_surrogate_key([...]) }}`, built from the grain's
-  columns in the same order they're grouped by, and name the column `<model_name>_key` (so
+- **Every model needs an actual single-column primary key - not just a test.** If a mart's
+  grain has no single natural key (e.g. one row per location per day), generate a surrogate
+  key with `{{ dbt_utils.generate_surrogate_key([...]) }}`, built from the grain's columns in
+  the same order they're grouped by, and name the column `<model_name>_key` (so
   `location_performance.sql` produces `location_performance_key`) - always ending in `_key`,
   never `_id`, to distinguish a generated key from a natural primary key (which is always
-  `<object>_id`). Don't invent a different name or skip the surrogate key if the grain has no
-  natural key - a missing or inconsistently-named grain key has shown up as a real, recurring
-  inconsistency.
+  `<object>_id`). A `dbt_utils.unique_combination_of_columns` test on the grain's columns is
+  not a substitute for this - it can tell you the grain is unique, but the model still needs
+  a real primary key column. Don't invent a different name or skip the surrogate key if the
+  grain has no natural key - a missing or inconsistently-named grain key has shown up as a
+  real, recurring inconsistency.
 - **Materialize new marts built on top of an incremental mart (like `orders`) as incremental
   too if they share its transactional, append-only grain - this is a requirement, not a
   suggestion.** A single incremental sibling in the project has not been enough signal on its
