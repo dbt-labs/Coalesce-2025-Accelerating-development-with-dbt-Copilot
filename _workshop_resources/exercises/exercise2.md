@@ -21,32 +21,33 @@ Show me the lineage for location_performance, including column-level lineage.
 
 4. Now look closer, and compare the model against `dbt-styleguide.md` and against the
    project's other marts. Wizard infers standards from surrounding files, but there can be
-   inconsistencies, and not everything that's written down actually gets followed. This is
-   not an exhaustive list - Wizard's actual output will vary, so look for whatever doesn't
-   match, not just the areas below:
+   inconsistencies, and not everything that's written down actually gets followed. Work
+   through this list - Wizard's actual output will vary run to run, so not everything below
+   will necessarily be off, but check each one specifically rather than skimming for
+   whatever stands out:
 
-   - **Naming, top to bottom** - compare every CTE name, column name, and any generated key
-     against what's actually used elsewhere in this project's marts, not just what
-     `dbt-styleguide.md` says. Does everything line up, or did something drift?
-   - **Aliases and join style** - explicit `as` everywhere, no short table aliases, no
-     re-aliased CTE names, explicit join types, qualified column names when joining more than
-     one table?
+   - **Count columns** - is every count-style column named `count_<noun>` (e.g.
+     `count_orders`), or did it come out as `<noun>_count`?
+   - **The last CTE** - open the model and look at the CTE immediately before the final
+     `select`. Is it named `final`, or something else (including the model's own name)?
+   - **Generated keys** - if the model introduces a surrogate/generated key (look for
+     `dbt_utils.generate_surrogate_key`), does the column name end in `_key`, or `_id`?
+   - **Aggregation order** - find where `order_items` (or any raw, item-level data) is used.
+     Is it aggregated to its own grain in a dedicated CTE *before* being joined to anything
+     else, or is it joined in raw and grouped directly to the model's final grain in one step?
+   - **Join type to `locations`** - is it `left join` or `inner join`? Compare to how
+     `order_items.sql`, `orders.sql`, and `customers.sql` join to their reference tables.
+   - **Materialization** - open `dbt_project.yml`'s defaults and `orders.sql` for comparison.
+     Is this new mart a plain `table`, or `incremental` like `orders`? If it did go
+     incremental, check the lookback filter: is it applied to every CTE that drives the
+     grain, and does it have a fallback (e.g. `coalesce`) for when the target table is empty?
+   - **Model-level tests** - open the yml. Is there at least one test under a top-level
+     `data_tests:` key (not nested under a column), or only column-level tests?
+   - **yml config** - compare this model's yml side by side with `customers.yml` or
+     `orders.yml`. Does it set `config.group` and `config.meta.owner` the same way?
    - **What it's built on** - did Wizard build on top of existing marts (`orders`,
      `order_items`, `locations`), or did it re-join raw sources/staging models and re-derive
      logic (like food/drink classification) that already exists elsewhere?
-   - **What happens before the final grouping** - trace exactly what gets joined to what, and
-     in what order, relative to when aggregation happens. Compare that structure to how the
-     project's other marts are built, not just whether the numbers come out right.
-   - **Materialization, and what would happen on a second run** - does this mart's
-     materialization match how the project handles similar data elsewhere? If it's more
-     sophisticated than a plain table, don't just confirm it builds once - think through (or
-     actually run) what happens on a first build from nothing, and again right after that.
-   - **Testing and documentation completeness** - model-level tests as well as column-level
-     ones, and whether anything about how a total relates to its parts (timing, basis, what a
-     number is actually built from) needed spelling out for someone reading this cold.
-   - **Everything else every other mart in this project carries** - check this model's yml
-     against a sibling mart's yml side by side. Anything configured consistently across the
-     marts you already have that this new one is missing?
 
 5. If you find violations, ask Wizard to fix them, or fix them yourself. Either way, you're
    about to turn these findings into something reusable - keep a running list.
