@@ -1,6 +1,10 @@
 models:
   - name: product_performance
     description: Daily performance summary per product, offering revenue, items sold, and margin (item price minus supply cost). One row per product per day.
+    config:
+      group: analytics_engineering
+      meta:
+        owner: analytics_engineering
     data_tests:
       - dbt_utils.expression_is_true:
           arguments:

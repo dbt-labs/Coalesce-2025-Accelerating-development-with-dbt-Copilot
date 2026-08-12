@@ -1,0 +1,15 @@
+models:
+  - name: supplies
+    description: List of supplies used to fulfill products, one row per supply per product.
+    config:
+      group: analytics_engineering
+      meta:
+        owner: analytics_engineering
+    columns:
+      - name: supply_uuid
+        description: The unique key for each supply cost. Supply costs fluctuate and receive a new row with a new UUID, so there can be multiple rows per product.
+        data_tests:
+          - not_null
+          - unique
+      - name: product_id
+        description: The foreign key relating to the product this supply is used for.

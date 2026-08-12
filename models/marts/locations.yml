@@ -1,0 +1,13 @@
+models:
+  - name: locations
+    description: List of locations, one row per location.
+    config:
+      group: analytics_engineering
+      meta:
+        owner: analytics_engineering
+    columns:
+      - name: location_id
+        description: The unique key for each location.
+        data_tests:
+          - not_null
+          - unique

@@ -1,6 +1,10 @@
 models:
   - name: customers
     description: Customer overview data mart, offering key details for each unique customer. One row per customer.
+    config:
+      group: analytics_engineering
+      meta:
+        owner: analytics_engineering
     data_tests:
       - dbt_utils.expression_is_true:
           arguments:
