@@ -41,11 +41,12 @@ observed to get missed:
 - **Surrogate keys: use this exact pattern, every time, so it stops varying run to run.** If
   a mart's grain has no single natural key (e.g. one row per location per day), generate a
   surrogate key with `{{ dbt_utils.generate_surrogate_key([...]) }}`, built from the grain's
-  columns in the same order they're grouped by, and name the column `<model_name>_id` (so
-  `location_performance.sql` produces `location_performance_id`, matching the project's
-  `<object>_id` primary key convention). Don't invent a different name or skip the surrogate
-  key if the grain has no natural key - a missing or inconsistently-named grain key has shown
-  up as a real, recurring inconsistency.
+  columns in the same order they're grouped by, and name the column `<model_name>_key` (so
+  `location_performance.sql` produces `location_performance_key`) - always ending in `_key`,
+  never `_id`, to distinguish a generated key from a natural primary key (which is always
+  `<object>_id`). Don't invent a different name or skip the surrogate key if the grain has no
+  natural key - a missing or inconsistently-named grain key has shown up as a real, recurring
+  inconsistency.
 - **Materialize new marts built on top of an incremental mart (like `orders`) as incremental
   too if they share its transactional, append-only grain - this is a requirement, not a
   suggestion.** A single incremental sibling in the project has not been enough signal on its
@@ -66,15 +67,6 @@ observed to get missed:
   entity's complete history to number correctly, and will silently produce wrong results once
   the source is filtered to a lookback window per run - either compute them over an unfiltered
   ref instead of the filtered import CTE, or drop the column if nothing depends on it.
-- **Reconciliation tests must hold unconditionally, not just under today's data.** If you
-  write a test asserting that component measures sum to a total (e.g.
-  `food_revenue + drink_revenue = total_revenue`), first check whether the categories are
-  guaranteed exhaustive. If they aren't (e.g. a product could be neither food nor drink), do
-  one of: add a residual/"other" bucket so the identity holds unconditionally (see
-  `location_performance.sql`'s `other_revenue`), scope the test as an inequality (`<=`) that a
-  new category can't break, or explicitly document the assumption in the column description.
-  Don't leave an untested assumption of exhaustiveness implicit in an equality test - it will
-  pass today and fail silently-until-it-doesn't the day a new category shows up.
 - **Document basis mismatches and temporal-consistency risk explicitly, in the column
   description, whenever they exist:**
   - If a headline total and its component breakdowns use a different basis (e.g. one is

@@ -66,29 +66,24 @@ description: Use when building a new dbt mart model in this project - covers gra
 
 7. **If the grain has no single natural key, generate a surrogate key - the same way every
    time.** Use `{{ dbt_utils.generate_surrogate_key([...]) }}` built from the grain's columns
-   in the same order they're grouped by, and name the resulting column `<model_name>_id`
-   (e.g. `location_performance.sql` produces `location_performance_id`). This project has no
-   tolerance for inventing a new naming pattern per model - use this one.
+   in the same order they're grouped by, and name the resulting column `<model_name>_key`
+   (e.g. `location_performance.sql` produces `location_performance_key`) - always ending in
+   `_key`, never `_id`, to distinguish a generated key from a natural primary key (which is
+   always `<object>_id`). This project has no tolerance for inventing a new naming pattern
+   per model - use this one.
 
 8. **Write the SQL to match project style.** Follow `dbt-styleguide.md`: `with` CTEs, explicit
    `as` aliases, snake_case, explicit join types, group-by-number, no short table aliases.
    Counts are named `count_<noun>`, never `<noun>_count`.
 
-9. **Write reconciliation tests so they can't break on new data, not just today's data.** If
-   you assert that component measures sum to a total (e.g.
-   `food_revenue + drink_revenue = total_revenue`), check whether the categories are
-   guaranteed exhaustive. If not, add a residual/"other" bucket so the identity holds
-   unconditionally, scope the test as an inequality (`<=`) instead, or document the assumption
-   explicitly - don't leave an implicit exhaustiveness assumption baked into an equality test.
-
-10. **Document basis mismatches and temporal-consistency risk in the column description,
+9. **Document basis mismatches and temporal-consistency risk in the column description,
     whenever they exist.** If a total and its components use a different basis (tax-inclusive
     vs. not), say so in both descriptions. If a measure is built from a dimension attribute
     that can change over time (e.g. current catalog price via a join to `products`) rather
     than a value captured at transaction time, document that it reflects current pricing and
     may not match the historical transaction amount.
 
-11. **Write the YAML.** Every model needs:
+10. **Write the YAML.** Every model needs:
     - a model-level `description`
     - a `description` for every column
     - `config.meta.owner` and `config.group` set to `analytics_engineering` (see
@@ -105,7 +100,7 @@ description: Use when building a new dbt mart model in this project - covers gra
       test, since dbt evaluates unit tests without an existing target relation to check
       `is_incremental()` against.
 
-12. **First build of an incremental model with a unit test: bootstrap it.** dbt needs to
+11. **First build of an incremental model with a unit test: bootstrap it.** dbt needs to
     introspect the target relation's column types to validate a unit test's `expect` block. On
     the very first build, that relation doesn't exist yet, so `dbt build` fails with a
     schema-introspection error on the unit test - this is a known dbt limitation, not a bug in
@@ -113,15 +108,15 @@ description: Use when building a new dbt mart model in this project - covers gra
     relation, then run `dbt build` normally. You only need to do this once per model, or again
     after dropping/recreating the table from scratch.
 
-13. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
+12. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
     passes its tests before considering the model done. If the model is incremental, run it
     twice in a row and confirm row counts and historical values are unchanged after the second
     run - a filter that only covers part of the grain won't show up as a failure on the first
     run, only on the second.
 
-14. **Before finishing, re-check this exact list against your own output** - naming
-    (`count_` prefix, `final` CTE, surrogate key convention), join discipline (aggregate
-    before join, `left join` for enrichment), materialization (incremental if transactional),
-    governance metadata (`meta.owner`/`group`), and test rigor (model-level test, exhaustive
-    reconciliation, temporal/basis documentation). Every one of these has been observed to get
-    missed at least once - don't assume any of them happened automatically.
+13. **Before finishing, re-check this exact list against your own output** - naming
+    (`count_` prefix, `final` CTE, `_key` surrogate key convention), join discipline
+    (aggregate before join, `left join` for enrichment), materialization (incremental if
+    transactional), governance metadata (`meta.owner`/`group`), and test rigor (model-level
+    test, temporal/basis documentation). Every one of these has been observed to get missed
+    at least once - don't assume any of them happened automatically.
