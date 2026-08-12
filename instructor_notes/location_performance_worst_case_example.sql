@@ -1,5 +1,5 @@
 -- INSTRUCTOR EXAMPLE ONLY - deliberately violates every standard in AGENTS.md/SKILL.md.
--- See _workshop_resources/instructor_notes/ for the annotated version and explanation.
+-- See instructor_notes/ for the annotated version and explanation.
 -- Do not use as a template, and do not ship this file to attendees.
 
 {{

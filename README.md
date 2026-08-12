@@ -19,7 +19,7 @@ The loop this lab teaches: **prompt -> review -> capture -> accelerate.**
 1. Log in to your dbt platform workshop sandbox in dbt Studio. Registration details will be
    provided at the start of the session.
 2. Confirm dbt Wizard is available in your sandbox and the starter project is loaded.
-3. Open `_workshop_resources/exercises/exercise1.md` and start there.
+3. Open `exercises/exercise1.md` and start there.
 
 ## What's in this repo
 
@@ -28,7 +28,7 @@ items, products, locations, supplies) with staging models in `models/staging/` a
 models in `models/marts/`. `dbt-styleguide.md` documents this project's naming and SQL
 conventions.
 
-- `_workshop_resources/exercises/` - the five hands-on exercises for this lab, in order.
+- `exercises/` - the five hands-on exercises for this lab, in order.
 - `AGENTS.md` - always-on project context for dbt Wizard.
 - `.agents/skills/create-mart-model/` - a reusable skill for building new mart models in this
   project.
