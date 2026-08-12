@@ -62,7 +62,7 @@ compute_booleans as (
 
 ),
 
-customer_order_count as (
+final as (
 
     select
         *,
@@ -76,4 +76,4 @@ customer_order_count as (
 
 )
 
-select * from customer_order_count
+select * from final

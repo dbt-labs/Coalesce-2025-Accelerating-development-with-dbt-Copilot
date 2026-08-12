@@ -31,7 +31,7 @@ customer_orders_summary as (
 
 ),
 
-joined as (
+final as (
 
     select
         customers.*,
@@ -55,4 +55,4 @@ joined as (
 
 )
 
-select * from joined
+select * from final

@@ -1,9 +1,9 @@
 with
 
-products as (
+final as (
 
     select * from {{ ref('stg_products') }}
 
 )
 
-select * from products
+select * from final

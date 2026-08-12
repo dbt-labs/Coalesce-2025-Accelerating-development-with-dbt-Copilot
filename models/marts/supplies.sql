@@ -1,9 +1,9 @@
 with
 
-supplies as (
+final as (
 
     select * from {{ ref('stg_supplies') }}
 
 )
 
-select * from supplies
+select * from final

@@ -38,7 +38,7 @@ order_supplies_summary as (
 
 ),
 
-joined as (
+final as (
 
     select
         order_items.order_item_id,
@@ -65,4 +65,4 @@ joined as (
 
 )
 
-select * from joined
+select * from final
