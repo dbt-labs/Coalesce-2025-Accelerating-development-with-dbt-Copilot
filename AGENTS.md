@@ -26,7 +26,14 @@ conventions in this project. Every new model must conform to it.
   `coalesce(..., '1900-01-01'::date)` (or similar) - without it, `max(order_date)` against an
   empty target relation returns `NULL` and the filter silently excludes every row instead of
   loading anything. Marts with a fixed, non-growing grain (like one row per customer or per
-  product) stay `table`-materialized per `dbt_project.yml` defaults.
+  product) stay `table`-materialized per `dbt_project.yml` defaults. Being transactional
+  (append-mostly, one row per event) is a good signal for incremental too - but before making
+  a transactional mart incremental, check for window functions that partition over a full
+  entity history (e.g. `row_number() over (partition by customer_id order by order_date)`).
+  Those need the entity's complete history to number correctly, and will silently produce
+  wrong results once the source is filtered to a lookback window per run - either compute
+  them over an unfiltered ref instead of the filtered import CTE, or drop the column if
+  nothing depends on it.
 - Every new mart needs a `.yml` with a model description, a column description for every
   column, at least one `data_tests` assertion on the model as a whole (e.g. a reconciling
   expression or a uniqueness-of-grain check), and at least one `unit_tests` case, matching the

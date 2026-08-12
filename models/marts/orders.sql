@@ -1,14 +1,36 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='order_id',
+        incremental_strategy='merge'
+    )
+}}
+
 with
 
 orders as (
 
     select * from {{ ref('stg_orders') }}
 
+    {% if is_incremental() %}
+    where order_date >= (
+        select coalesce(dateadd(day, -3, max(order_date)), '1900-01-01'::date)
+        from {{ this }}
+    )
+    {% endif %}
+
 ),
 
 order_items as (
 
     select * from {{ ref('order_items') }}
+
+    {% if is_incremental() %}
+    where order_date >= (
+        select coalesce(dateadd(day, -3, max(order_date)), '1900-01-01'::date)
+        from {{ this }}
+    )
+    {% endif %}
 
 ),
 
@@ -20,7 +42,7 @@ order_items_summary as (
         sum(supply_cost) as order_cost,
         sum(product_price) as order_items_subtotal,
         count(order_item_id) as count_order_items,
-        
+
         -- Try switching these from 'sum' to 'count' and then run 'dbt test'
         sum(
             case
@@ -41,7 +63,7 @@ order_items_summary as (
 
 ),
 
-compute_booleans as (
+final as (
 
     select
         orders.*,
@@ -59,20 +81,6 @@ compute_booleans as (
     left join
         order_items_summary
         on orders.order_id = order_items_summary.order_id
-
-),
-
-final as (
-
-    select
-        *,
-
-        row_number() over (
-            partition by customer_id
-            order by order_date asc
-        ) as customer_order_number
-
-    from compute_booleans
 
 )
 

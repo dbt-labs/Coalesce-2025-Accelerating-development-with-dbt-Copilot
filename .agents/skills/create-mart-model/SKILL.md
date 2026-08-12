@@ -40,6 +40,14 @@ description: Use when building a new dbt mart model in this project - covers gra
    If the grain is fixed (one row per a dimension that doesn't grow, like one row per
    customer or product), leave it `table`-materialized (the project default for marts).
 
+   A transactional, append-mostly source (one row per event) is a good signal for
+   incremental - but check first for window functions partitioned over an entity's full
+   history (e.g. `row_number() over (partition by customer_id order by order_date)`). Those
+   need every one of that entity's rows to number correctly, and silently break once the
+   source is filtered to a lookback window per run, since each run only sees that window's
+   slice per entity. Either compute that column from an unfiltered ref, or drop it if nothing
+   downstream depends on it - don't leave it computed against the filtered CTE.
+
 5. **Write the SQL to match project style.** Follow `dbt-styleguide.md`: `with` CTEs, explicit
    `as` aliases, snake_case, explicit join types, group-by-number, no short table aliases.
 
