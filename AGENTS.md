@@ -2,9 +2,9 @@
 
 ## SQL style and naming conventions
 
-Follow `dbt-styleguide.md` for all naming, SQL styling, Jinja styling, and YAML styling
-conventions in this project. Every new model must conform to it. The following points are
-called out explicitly here, in addition to living in the styleguide, because they have been
+Follow `dbt-styleguide.md` for naming and SQL styling conventions in this project. Every new
+model must conform to it. The following points are called out explicitly here, in addition to
+living in the styleguide, because they have been
 observed to get missed:
 
 - **Counts are prefixed `count_<noun>`** (e.g. `count_orders`), never suffixed (`orders_count`).

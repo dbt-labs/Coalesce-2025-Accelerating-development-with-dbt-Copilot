@@ -72,9 +72,8 @@ description: Use when building a new dbt mart model in this project - covers gra
    always `<object>_id`). This project has no tolerance for inventing a new naming pattern
    per model - use this one.
 
-8. **Write the SQL to match project style.** Follow `dbt-styleguide.md`: `with` CTEs, explicit
-   `as` aliases, snake_case, explicit join types, group-by-number, no short table aliases.
-   Counts are named `count_<noun>`, never `<noun>_count`.
+8. **Write the SQL to match project style.** Follow `dbt-styleguide.md`. Counts are named
+   `count_<noun>`, never `<noun>_count`.
 
 9. **Document basis mismatches and temporal-consistency risk in the column description,
     whenever they exist.** If a total and its components use a different basis (tax-inclusive
