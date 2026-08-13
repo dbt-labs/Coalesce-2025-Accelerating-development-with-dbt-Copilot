@@ -1,12 +1,3 @@
-# AGENTS.md
-
-Always-on project context - dbt Wizard reads this file for every prompt in this project.
-This project used to keep its conventions in a separate `dbt-styleguide.md`, but a rule
-written somewhere Wizard doesn't automatically read isn't a rule that reliably gets
-followed. Everything that mattered from that file has been migrated here instead, and
-`dbt-styleguide.md` no longer exists on this branch - this file is now the single source of
-truth for project conventions.
-
 ## Naming and keys
 
 - Every model must have a single-column primary key. If the grain has a natural single
@@ -29,18 +20,16 @@ truth for project conventions.
 - Every mart needs `config.meta.owner` and `config.group` set to `analytics_engineering`,
   matching every other model in `models/marts/`. See `models/marts/_groups.yml` for the
   group definition.
-- This project requires the `arguments:` property on generic test definitions (see
-  `dbt_project.yml`'s `require_generic_test_arguments_property` flag) - write test arguments
-  like `expression:`, `to:`/`field:`, or `values:` nested under `arguments:`, not at the
-  top level of the test config. The old top-level form is a parse error here, not just a
-  style mismatch.
 
 ## Materialization
 
-- Materialize new marts built on top of an incremental mart (like `orders`) as incremental
-  too if they share its transactional, append-only grain - this is a requirement, not a
+This applies to any model, not just marts - staging and intermediate models can be
+incremental too if their grain warrants it.
+
+- Materialize a model built on top of an incremental model (like `orders`) as incremental
+  too if it shares that transactional, append-only grain - this is a requirement, not a
   suggestion. A single incremental sibling in the project has not been enough signal on its
-  own; treat this as explicit, not inferred. Mart models with a daily or event grain that only
+  own; treat this as explicit, not inferred. Models with a daily or event grain that only
   grows forward over time (e.g. one row per location per day) should be materialized as
   `incremental`, with a `unique_key` matching the grain (ideally the model's own primary key
   column) and a short lookback window (2-3 days) on the date column, using the `merge`
@@ -51,14 +40,22 @@ truth for project conventions.
 - Wrap the lookback bound in `coalesce(..., '1900-01-01'::date)` (or similar) - without it,
   `max(order_date)` against an empty target relation returns `NULL` and the filter silently
   excludes every row instead of loading anything.
-- Marts with a fixed, non-growing grain (like one row per customer or per product) stay
+- Models with a fixed, non-growing grain (like one row per customer or per product) stay
   `table`-materialized per `dbt_project.yml` defaults.
-- Before making any transactional mart incremental, check for window functions that partition
-  over a full entity history (e.g. `row_number() over (partition by customer_id order by
-  order_date)`). Those need the entity's complete history to number correctly, and will
-  silently produce wrong results once the source is filtered to a lookback window per run -
-  either compute them over an unfiltered ref instead of the filtered import CTE, or drop the
-  column if nothing depends on it.
+- Before making any transactional model incremental, check for window functions that
+  partition over a full entity history (e.g. `row_number() over (partition by customer_id
+  order by order_date)`). Those need the entity's complete history to number correctly, and
+  will silently produce wrong results once the source is filtered to a lookback window per
+  run - either compute them over an unfiltered ref instead of the filtered import CTE, or
+  drop the column if nothing depends on it.
+- If an incremental model has a unit test, its first-ever build will fail with a
+  schema-introspection error - dbt needs the target relation to exist to check its schema
+  against the unit test's `expect` block, and on a brand-new model it doesn't yet. Run
+  `dbt run --empty --select <model_name>` once first, then build normally. This only comes
+  up if the model has a unit test in the first place; not every model needs one.
+- After building an incremental model, run it a second time and confirm row counts and
+  historical values are unchanged - a lookback filter that only covers part of the grain
+  won't show up as a failure on the first run, only on the second.
 
 ## SQL structure
 
@@ -94,11 +91,12 @@ truth for project conventions.
   Don't write a test that just restates the model's own arithmetic (e.g. asserting
   `a - b = c` when `c` was literally computed as `a - b` in the same query) - it can never
   fail and catches nothing.
-- Every new mart needs at least one `unit_tests` case with representative input/output rows.
-  Unit tests on incremental models must set `overrides: macros: is_incremental: false`. On
-  the first build of a new incremental model that has a unit test, `dbt build` will fail with
-  a schema-introspection error because the target relation doesn't exist yet - run
-  `dbt run --empty --select <model_name>` once first, then build.
+- Unit tests aren't required on every model - write one where it's actually useful. If you
+  do write a `unit_tests` case for a model that's `materialized='incremental'`, set
+  `overrides: macros: is_incremental: false` on it - dbt evaluates unit tests without an
+  existing target relation, so without the override the model's `is_incremental()` branch
+  won't behave the way you expect. (See the Materialization section above for the separate
+  first-build bootstrap step this can also require.)
 - Document basis mismatches and temporal-consistency risk explicitly, in the column
   description, whenever they exist:
   - If a headline total and its component breakdowns use a different basis (e.g. one is

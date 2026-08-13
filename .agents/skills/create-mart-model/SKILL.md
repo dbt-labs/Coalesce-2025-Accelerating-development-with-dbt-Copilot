@@ -23,20 +23,17 @@ only tell you when and how to apply them while building a mart.
    go: primary key/surrogate key naming, `count_` prefixes, aggregate-before-join, `left
    join` for enrichment, and the `final` terminal CTE.
 
-4. **If incremental and this is the model's first build with a unit test, bootstrap it.**
-   dbt needs the target relation to exist to introspect its schema for the unit test's
-   `expect` block, and on a brand-new model it doesn't exist yet. Run
-   `dbt run --empty --select <model_name>` once, then build normally.
+4. **Write the yml**: model description, column descriptions, governance config
+   (`meta.owner`/`group`), and a model-level `data_tests` entry - per `AGENTS.md`'s testing
+   and documentation rules. Add a `unit_tests` case if one's actually useful here (not
+   required on every model).
 
-5. **Write the yml**: model description, column descriptions, governance config
-   (`meta.owner`/`group`), a model-level `data_tests` entry, and a `unit_tests` case - per
-   `AGENTS.md`'s testing and documentation rules.
+5. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
+   passes its tests. If the model is incremental, follow `AGENTS.md`'s incremental
+   validation steps: bootstrap the first build with `dbt run --empty --select <model_name>`
+   if it has a unit test, then run it a second time and confirm row counts and historical
+   values are unchanged.
 
-6. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
-   passes its tests. If the model is incremental, run it twice in a row and confirm row
-   counts and historical values are unchanged after the second run - a filter that only
-   covers part of the grain won't show up as a failure on the first run, only on the second.
-
-7. **Before finishing, re-check your output against `AGENTS.md` directly, rule by rule** -
+6. **Before finishing, re-check your output against `AGENTS.md` directly, rule by rule** -
    don't rely on having remembered everything correctly from step 3 onward. Every rule in
    that file has been observed to get missed at least once.
