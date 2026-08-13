@@ -16,7 +16,8 @@ product. Can you build us a model for that, with tests and docs?
    step from Exercise 1: run `dbt run --empty --select product_performance`, then build again.
 
 2. Review the output the same way you did in Exercise 2: preview the data, check the
-   lineage, and compare it against `dbt-styleguide.md` and your `AGENTS.md`.
+   lineage, and compare it against your `AGENTS.md` (and `dbt-styleguide.md`, if you haven't
+   finished migrating its content over yet).
 
 3. Notice how much (or how little) correction this required compared to Exercise 1. The
    `create-mart-model` skill and `AGENTS.md` you wrote in Exercise 3 apply here too, even
