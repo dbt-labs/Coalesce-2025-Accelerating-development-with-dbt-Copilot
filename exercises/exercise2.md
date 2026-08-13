@@ -9,17 +9,23 @@ requirements. If there are any violations, fix them.
 Show me a preview of location_performance.
 </ul>
 
-2. Ask Wizard to show you where this model sits in the DAG.
+2. Ask Wizard to visualize the data, right in the thread.
+
+<ul>
+Can you visualize total_revenue per location over time? A line-style plot, in-thread.
+</ul>
+
+3. Ask Wizard to show you where this model sits in the DAG.
 
 <ul>
 Show me the lineage for location_performance, including column-level lineage.
 </ul>
 
-3. Confirm the data itself looks right at a glance: does revenue look plausible per
+4. Confirm the data itself looks right at a glance: does revenue look plausible per
    location? Does the food/drink split look plausible? Would you trust this if a store
    manager saw it tomorrow?
 
-4. Now look closer, and compare the model against `dbt-styleguide.md` and against the
+5. Now look closer, and compare the model against `dbt-styleguide.md` and against the
    project's other marts. Wizard infers standards from surrounding files, but there can be
    inconsistencies, and not everything that's written down actually gets followed. Work
    through this list - Wizard's actual output will vary run to run, so not everything below
@@ -49,5 +55,5 @@ Show me the lineage for location_performance, including column-level lineage.
      `order_items`, `locations`), or did it re-join raw sources/staging models and re-derive
      logic (like food/drink classification) that already exists elsewhere?
 
-5. If you find violations, ask Wizard to fix them, or fix them yourself. Either way, you're
+6. If you find violations, ask Wizard to fix them, or fix them yourself. Either way, you're
    about to turn these findings into something reusable - keep a running list.
