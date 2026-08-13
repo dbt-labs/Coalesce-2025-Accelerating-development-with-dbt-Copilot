@@ -25,8 +25,10 @@ The loop this lab teaches: **prompt -> review -> capture -> accelerate.**
 
 This is a jaffle_shop dbt project: a small e-commerce dataset (customers, orders, order
 items, products, locations, supplies) with staging models in `models/staging/` and mart
-models in `models/marts/`. `dbt-styleguide.md` documents this project's naming and SQL
-conventions.
+models in `models/marts/`. `AGENTS.md` documents this project's naming, SQL, and
+mart-modeling conventions - this branch has already migrated everything worth keeping out of
+the standalone styleguide this project started with, so `AGENTS.md` is now the single source
+of truth.
 
 - `exercises/` - the five hands-on exercises for this lab, in order.
 - `AGENTS.md` - always-on project context for dbt Wizard.
