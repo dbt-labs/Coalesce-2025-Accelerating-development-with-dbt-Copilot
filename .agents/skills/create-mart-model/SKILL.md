@@ -90,13 +90,18 @@ description: Use when building a new dbt mart model in this project - covers gra
     - a `description` for every column
     - `config.meta.owner` and `config.group` set to `analytics_engineering` (see
       `models/marts/_groups.yml`), matching every other mart in this project
-    - at least one model-level `data_tests` entry that asserts a real invariant - something
-      that could actually fail (a reconciling expression across independently-derived
-      components, a bound like `x <= y`, or a uniqueness-of-grain check). This is required on
-      every mart, not optional - a model with only column-level tests is incomplete. Don't
-      write a test that just restates the model's own arithmetic (e.g. asserting `a - b = c`
-      when `c` was literally computed as `a - b` in the same query) - it can never fail and
-      catches nothing.
+    - at least one model-level `data_tests` entry - declared under the model's top-level
+      `data_tests:` key, not nested under a column - that could actually catch a real bug.
+      Write a check that reconciles independently-computed values against each other, for
+      example `food_revenue + drink_revenue + other_revenue = total_revenue`
+      (`location_performance.yml`) or `total_margin <= total_revenue`
+      (`product_performance.yml`). This is required on every mart, not optional - a model
+      with only column-level tests is incomplete. If a model genuinely has nothing to
+      reconcile, a `dbt_utils.unique_combination_of_columns` check on the grain is an
+      acceptable fallback, but treat it as a last resort, not the goal. Don't write a test
+      that just restates the model's own arithmetic (e.g. asserting `a - b = c` when `c` was
+      literally computed as `a - b` in the same query) - it can never fail and catches
+      nothing.
     - at least one `unit_tests` case with representative input/output rows. If the model is
       `materialized='incremental'`, set `overrides: macros: is_incremental: false` on the unit
       test, since dbt evaluates unit tests without an existing target relation to check
