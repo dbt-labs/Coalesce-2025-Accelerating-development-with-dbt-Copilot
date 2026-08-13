@@ -93,9 +93,8 @@ description: Use when building a new dbt mart model in this project - covers gra
     - at least one model-level `data_tests` entry - declared under the model's top-level
       `data_tests:` key, not nested under a column - that could actually catch a real bug.
       Write a check that reconciles independently-computed values against each other, for
-      example `food_revenue + drink_revenue + other_revenue = total_revenue`
-      (`location_performance.yml`) or `total_margin <= total_revenue`
-      (`product_performance.yml`). This is required on every mart, not optional - a model
+      example `total_margin <= total_revenue` (`product_performance.yml`). This is required
+      on every mart, not optional - a model
       with only column-level tests is incomplete. If a model genuinely has nothing to
       reconcile, a `dbt_utils.unique_combination_of_columns` check on the grain is an
       acceptable fallback, but treat it as a last resort, not the goal. Don't write a test

@@ -48,8 +48,8 @@ which document a rule lives in.
   nothing depends on it.
 - **Every mart model needs at least one model-level `data_tests` entry that could actually
   catch a real bug** - a reconciling check between independently-computed values (e.g.
-  `food_revenue + drink_revenue + other_revenue = total_revenue`, or `total_margin <=
-  total_revenue`), not just the `not_null`/`unique` tests that come from having a primary
+  `total_margin <= total_revenue`), not just the `not_null`/`unique` tests that come from
+  having a primary
   key. If there's truly nothing to reconcile, a `dbt_utils.unique_combination_of_columns`
   check on the grain is an acceptable fallback, but not the goal. A model with nothing under a
   top-level `data_tests:` key in its yml is incomplete.
