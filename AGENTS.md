@@ -68,9 +68,9 @@ incremental too if their grain warrants it.
 - Default to `left join` when enriching a fact-grain CTE with a dimension/reference table
   (e.g. joining to `locations` for `location_name`, or `products` for `product_name`). Only
   use `inner join` when you specifically intend to filter out unmatched rows. Every existing
-  mart in this project (`order_items`, `orders`, `customers`) enriches with `left join` - an
-  `inner join` here will silently drop fact rows on any foreign-key gap, which won't show up
-  as a test failure.
+  model in this project that does this (`order_items`, `orders`, `customers`) enriches with
+  `left join` - an `inner join` here will silently drop fact rows on any foreign-key gap,
+  which won't show up as a test failure.
 - The terminal CTE - the one immediately before the final `select` - is always named `final`
   in every model in this project. Never name it after the model itself (e.g. don't name the
   last CTE in `location_performance.sql` `location_performance`) and never reuse an earlier
@@ -78,14 +78,14 @@ incremental too if their grain warrants it.
 
 ## Testing and documentation
 
-- Every new mart needs a `.yml` with a model description and a column description for every
-  column, matching the thoroughness of `models/marts/orders.yml` and
+- Every new model needs a `.yml` with a model description and a column description for
+  every column, matching the thoroughness of `models/marts/orders.yml` and
   `models/marts/customers.yml`.
-- Every mart model needs at least one model-level `data_tests` entry - declared under the
+- Every model needs at least one model-level `data_tests` entry - declared under the
   model's top-level `data_tests:` key, not nested under a column - that could actually catch
   a real bug. Write a check that reconciles independently-computed values against each
   other, for example `total_margin <= total_revenue` (`product_performance.yml`). This is
-  required on every mart, not optional - a model with only column-level tests is incomplete.
+  required on every model, not optional - a model with only column-level tests is incomplete.
   If a model genuinely has nothing to reconcile, a `dbt_utils.unique_combination_of_columns`
   check on the grain is an acceptable fallback, but treat it as a last resort, not the goal.
   Don't write a test that just restates the model's own arithmetic (e.g. asserting
@@ -107,12 +107,12 @@ incremental too if their grain warrants it.
     at transaction time, document that the figure reflects current pricing and may not match
     the actual historical transaction amount.
 
-## Building new marts
+## Model layering
 
-- Only staging models (`stg_*`) reference `{{ source(...) }}`. Every other model - marts,
-  and any intermediate models - must be built with `{{ ref(...) }}` on staging models,
-  intermediate models, or other marts. Never join directly to a raw source from a mart, even
-  if it seems more direct.
+- Only staging models (`stg_*`) reference `{{ source(...) }}`. Every other model - marts and
+  any intermediate models - must be built with `{{ ref(...) }}` on staging models,
+  intermediate models, or other marts. Never join directly to a raw source outside of a
+  staging model, even if it seems more direct.
 - Before re-deriving logic that might already exist, check whether an existing mart or
   staging model already contains it (e.g. food/drink classification, revenue totals,
   customer lifetime metrics). Build on top of that rather than duplicating the logic - it
