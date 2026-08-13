@@ -111,11 +111,14 @@ truth for project conventions.
 
 ## Building new marts
 
-- Before joining raw sources, check whether an existing mart or staging model already
-  contains the logic you need (e.g. food/drink classification, revenue totals, customer
-  lifetime metrics). Build on top of existing marts rather than re-deriving that logic from
-  raw sources - it keeps business logic defined in one place and avoids accidental join
-  fan-out.
+- Only staging models (`stg_*`) reference `{{ source(...) }}`. Every other model - marts,
+  and any intermediate models - must be built with `{{ ref(...) }}` on staging models,
+  intermediate models, or other marts. Never join directly to a raw source from a mart, even
+  if it seems more direct.
+- Before re-deriving logic that might already exist, check whether an existing mart or
+  staging model already contains it (e.g. food/drink classification, revenue totals,
+  customer lifetime metrics). Build on top of that rather than duplicating the logic - it
+  keeps business logic defined in one place and avoids accidental join fan-out.
 
 ## Reusable patterns
 
