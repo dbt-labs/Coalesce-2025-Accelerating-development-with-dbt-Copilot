@@ -20,11 +20,7 @@ specific to marts.
    Decide this now - retrofitting materialization after the model already has data in the
    warehouse means a `--full-refresh` to rebuild the physical table with the new schema/config.
 
-3. **Draft the SQL**, applying `AGENTS.md`'s naming, key, join, and aggregation rules as you
-   go: primary key/surrogate key naming, `count_` prefixes, aggregate-before-join, `left
-   join` for enrichment, and the `final` terminal CTE.
-
-4. **Write the yml.** Every mart needs:
+3. **Write the yml.** Every mart needs:
    - A model description and a column description for every column, matching the
      thoroughness of `models/marts/orders.yml` and `models/marts/customers.yml`.
    - `config.meta.owner` and `config.group` set to `analytics_engineering`, matching every
@@ -42,13 +38,7 @@ specific to marts.
    - A `unit_tests` case if one's actually useful here (not required on every model, per
      `AGENTS.md`).
 
-5. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
-   passes its tests. If the model is incremental, follow `AGENTS.md`'s incremental
-   validation steps: bootstrap the first build with `dbt run --empty --select <model_name>`
-   if it has a unit test, then run it a second time and confirm row counts and historical
-   values are unchanged.
-
-6. **Before finishing, re-check your output against `AGENTS.md` and step 4 above, rule by
-   rule** - don't rely on having remembered everything correctly from step 3 onward. Every
-   rule in `AGENTS.md`, and every requirement in step 4, has been observed to get missed at
+4. **Before finishing, re-check your output against `AGENTS.md` and step 3 above, rule by
+   rule** - don't rely on having remembered everything correctly from earlier steps. Every
+   rule in `AGENTS.md`, and every requirement in step 3, has been observed to get missed at
    least once.

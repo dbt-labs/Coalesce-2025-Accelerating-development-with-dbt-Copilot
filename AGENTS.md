@@ -31,9 +31,6 @@ ones - staging and intermediate models can be incremental too.
 - Filter every CTE that drives the model's grain to the same lookback window, not just one of
   them - filtering only a secondary/joined CTE while leaving the driving table unfiltered will
   cause `merge` to overwrite historical rows with incomplete data on the next incremental run.
-- Wrap the lookback bound in `coalesce(..., '1900-01-01'::date)` (or similar) - without it,
-  `max(order_date)` against an empty target relation returns `NULL` and the filter silently
-  excludes every row instead of loading anything.
 - Models with a fixed, non-growing grain (like one row per customer or per product) stay
   `table`-materialized per `dbt_project.yml` defaults.
 - Before making any transactional model incremental, check for window functions that
@@ -72,12 +69,7 @@ ones - staging and intermediate models can be incremental too.
 
 ## Testing and documentation
 
-- Unit tests aren't required on every model - write one where it's actually useful. If you
-  do write a `unit_tests` case for a model that's `materialized='incremental'`, set
-  `overrides: macros: is_incremental: false` on it - dbt evaluates unit tests without an
-  existing target relation, so without the override the model's `is_incremental()` branch
-  won't behave the way you expect. (See the Materialization section above for the separate
-  first-build bootstrap step this can also require.)
+- Unit tests aren't required on every model - write one where it's actually useful.
 - Document basis mismatches and temporal-consistency risk explicitly, in the column
   description, whenever they exist:
   - If a headline total and its component breakdowns use a different basis (e.g. one is
@@ -98,9 +90,3 @@ ones - staging and intermediate models can be incremental too.
   already contains it (e.g. food/drink classification, revenue totals,
   customer lifetime metrics). Build on top of that rather than duplicating the logic - it
   keeps business logic defined in one place and avoids accidental join fan-out.
-
-## Reusable patterns
-
-See `.agents/skills/` for task-specific workflows - the order to make these decisions in,
-and when to apply each rule above. Those skills assume you already know the rules in this
-file; they won't repeat them.
