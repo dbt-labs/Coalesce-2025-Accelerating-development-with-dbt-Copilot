@@ -18,8 +18,8 @@
   the model's top-level `data_tests:` key, not nested under a column) that could actually
   catch a real bug - not just the column-level `not_null`/`unique` checks that come from
   having a primary key. Concretely, write a check that reconciles independently-computed
-  values against each other, for example `total_margin <= total_revenue`
-  (`product_performance.yml`).
+  values against each other, for example `lifetime_spend_pretax + lifetime_tax_paid =
+  lifetime_spend` (`customers.yml`).
 
   If a model genuinely has no such relationship to check, test that its grain has no
   duplicates with `dbt_utils.unique_combination_of_columns` as a fallback - but treat that as
