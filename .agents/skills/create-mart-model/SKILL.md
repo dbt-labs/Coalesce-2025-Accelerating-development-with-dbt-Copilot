@@ -7,7 +7,8 @@ description: Use when building a new dbt mart model in this project - the step-b
 
 This is the process specific to building a new mart model in this project. It assumes you
 already know this project's conventions from `AGENTS.md` - this skill won't repeat them,
-only tell you when and how to apply them while building a mart.
+only tell you when and how to apply them while building a mart, and adds the requirements
+specific to marts.
 
 1. **Identify the grain.** State explicitly what one row represents (e.g. "one row per
    location per day"). Name the model to describe what it is, not how it's built (e.g.
