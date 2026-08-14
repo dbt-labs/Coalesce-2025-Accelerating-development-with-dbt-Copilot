@@ -15,16 +15,10 @@
   (`orders_count`). Check every aggregate/count column name against this before finishing a
   model.
 
-## Governance
-
-- Every mart needs `config.meta.owner` and `config.group` set to `analytics_engineering`,
-  matching every other model in `models/marts/`. See `models/marts/_groups.yml` for the
-  group definition.
-
 ## Materialization
 
-This applies to any model, not just marts - staging and intermediate models can be
-incremental too if their grain warrants it.
+This applies to any model whose grain warrants it, not just the obvious transactional
+ones - staging and intermediate models can be incremental too.
 
 - Materialize a model built on top of an incremental model (like `orders`) as incremental
   too if it shares that transactional, append-only grain - this is a requirement, not a
@@ -78,19 +72,6 @@ incremental too if their grain warrants it.
 
 ## Testing and documentation
 
-- Every new model needs a `.yml` with a model description and a column description for
-  every column, matching the thoroughness of `models/marts/orders.yml` and
-  `models/marts/customers.yml`.
-- Every model needs at least one model-level `data_tests` entry - declared under the
-  model's top-level `data_tests:` key, not nested under a column - that could actually catch
-  a real bug. Write a check that reconciles independently-computed values against each
-  other, for example `total_margin <= total_revenue` (`product_performance.yml`). This is
-  required on every model, not optional - a model with only column-level tests is incomplete.
-  If a model genuinely has nothing to reconcile, a `dbt_utils.unique_combination_of_columns`
-  check on the grain is an acceptable fallback, but treat it as a last resort, not the goal.
-  Don't write a test that just restates the model's own arithmetic (e.g. asserting
-  `a - b = c` when `c` was literally computed as `a - b` in the same query) - it can never
-  fail and catches nothing.
 - Unit tests aren't required on every model - write one where it's actually useful. If you
   do write a `unit_tests` case for a model that's `materialized='incremental'`, set
   `overrides: macros: is_incremental: false` on it - dbt evaluates unit tests without an
@@ -109,17 +90,17 @@ incremental too if their grain warrants it.
 
 ## Model layering
 
-- Only staging models (`stg_*`) reference `{{ source(...) }}`. Every other model - marts and
-  any intermediate models - must be built with `{{ ref(...) }}` on staging models,
-  intermediate models, or other marts. Never join directly to a raw source outside of a
-  staging model, even if it seems more direct.
-- Before re-deriving logic that might already exist, check whether an existing mart or
-  staging model already contains it (e.g. food/drink classification, revenue totals,
+- Only staging models (`stg_*`) reference `{{ source(...) }}`. Every other model must be
+  built with `{{ ref(...) }}` on staging models, intermediate models, or other existing
+  models. Never join directly to a raw source outside of a staging model, even if it seems
+  more direct.
+- Before re-deriving logic that might already exist, check whether an existing model
+  already contains it (e.g. food/drink classification, revenue totals,
   customer lifetime metrics). Build on top of that rather than duplicating the logic - it
   keeps business logic defined in one place and avoids accidental join fan-out.
 
 ## Reusable patterns
 
-See `.agents/skills/create-mart-model/SKILL.md` for the mart-building workflow - the order
-to make these decisions in, and when to apply each rule above. It assumes you already know
-the rules in this file; it won't repeat them.
+See `.agents/skills/` for task-specific workflows - the order to make these decisions in,
+and when to apply each rule above. Those skills assume you already know the rules in this
+file; they won't repeat them.

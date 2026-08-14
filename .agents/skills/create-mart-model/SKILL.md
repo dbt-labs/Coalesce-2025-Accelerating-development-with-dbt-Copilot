@@ -1,6 +1,6 @@
 ---
 name: create-mart-model
-description: Use when building a new dbt mart model in this project - the step-by-step process for grain selection, deciding materialization, drafting the SQL, and validating the result. For the actual naming/testing/materialization rules, see AGENTS.md - this skill is the mart-building workflow, not a restatement of those rules.
+description: Use when building a new dbt mart model in this project - the step-by-step process for grain selection, materialization, drafting the SQL, the yml requirements specific to marts (governance metadata, model-level tests), and validating the result. General rules that apply to every model, regardless of type, live in AGENTS.md instead.
 ---
 
 # Creating a mart model
@@ -23,10 +23,23 @@ only tell you when and how to apply them while building a mart.
    go: primary key/surrogate key naming, `count_` prefixes, aggregate-before-join, `left
    join` for enrichment, and the `final` terminal CTE.
 
-4. **Write the yml**: model description, column descriptions, governance config
-   (`meta.owner`/`group`), and a model-level `data_tests` entry - per `AGENTS.md`'s testing
-   and documentation rules. Add a `unit_tests` case if one's actually useful here (not
-   required on every model).
+4. **Write the yml.** Every mart needs:
+   - A model description and a column description for every column, matching the
+     thoroughness of `models/marts/orders.yml` and `models/marts/customers.yml`.
+   - `config.meta.owner` and `config.group` set to `analytics_engineering`, matching every
+     other model in `models/marts/`. See `models/marts/_groups.yml` for the group definition.
+   - At least one model-level `data_tests` entry - declared under the model's top-level
+     `data_tests:` key, not nested under a column - that could actually catch a real bug.
+     Write a check that reconciles independently-computed values against each other, for
+     example `total_margin <= total_revenue` (`product_performance.yml`). This is required,
+     not optional - a mart with only column-level tests is incomplete. If a model genuinely
+     has nothing to reconcile, a `dbt_utils.unique_combination_of_columns` check on the grain
+     is an acceptable fallback, but treat it as a last resort, not the goal. Don't write a
+     test that just restates the model's own arithmetic (e.g. asserting `a - b = c` when `c`
+     was literally computed as `a - b` in the same query) - it can never fail and catches
+     nothing.
+   - A `unit_tests` case if one's actually useful here (not required on every model, per
+     `AGENTS.md`).
 
 5. **Validate.** Run `dbt build --select <model_name>` and confirm it compiles, runs, and
    passes its tests. If the model is incremental, follow `AGENTS.md`'s incremental
@@ -34,6 +47,7 @@ only tell you when and how to apply them while building a mart.
    if it has a unit test, then run it a second time and confirm row counts and historical
    values are unchanged.
 
-6. **Before finishing, re-check your output against `AGENTS.md` directly, rule by rule** -
-   don't rely on having remembered everything correctly from step 3 onward. Every rule in
-   that file has been observed to get missed at least once.
+6. **Before finishing, re-check your output against `AGENTS.md` and step 4 above, rule by
+   rule** - don't rely on having remembered everything correctly from step 3 onward. Every
+   rule in `AGENTS.md`, and every requirement in step 4, has been observed to get missed at
+   least once.

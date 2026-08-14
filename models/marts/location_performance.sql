@@ -108,7 +108,7 @@ daily_location_summary as (
 
 ),
 
-joined as (
+final as (
 
     select
         {{ dbt_utils.generate_surrogate_key(['daily_location_summary.location_id', 'daily_location_summary.order_date']) }}
@@ -130,4 +130,4 @@ joined as (
 
 )
 
-select * from joined
+select * from final

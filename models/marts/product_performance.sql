@@ -45,7 +45,7 @@ daily_product_summary as (
 
 ),
 
-joined as (
+final as (
 
     select
         {{ dbt_utils.generate_surrogate_key(['daily_product_summary.product_id', 'daily_product_summary.order_date']) }}
@@ -67,4 +67,4 @@ joined as (
 
 )
 
-select * from joined
+select * from final
