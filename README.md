@@ -6,7 +6,7 @@ at dbt Summit 2026.
 ## Overview
 
 This lab shows how to use dbt Wizard in dbt Studio to ship a small dbt change end-to-end
-without lowering engineering quality. Over five exercises you'll prompt Wizard to build a
+without lowering engineering quality. Over four exercises you'll prompt Wizard to build a
 mart model with tests and docs, preview the resulting data and lineage, and then capture your
 team's standards so Wizard follows them on its own: an `AGENTS.md` file for SQL style and
 naming conventions, and a custom dbt agent skill for a repeatable model-creation pattern.
@@ -28,7 +28,7 @@ items, products, locations, supplies) with staging models in `models/staging/` a
 models in `models/marts/`. `dbt-styleguide.md` documents this project's naming and SQL
 conventions.
 
-- `exercises/` - the five hands-on exercises for this lab, in order.
+- `exercises/` - the four hands-on exercises for this lab, in order.
 - `exercises/expectations/` - what to expect from each exercise's result. Wizard's output
   isn't deterministic, so these describe a reasonable range of outcomes rather than a single
   correct answer.
