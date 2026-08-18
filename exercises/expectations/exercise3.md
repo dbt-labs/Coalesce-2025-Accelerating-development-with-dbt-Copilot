@@ -21,6 +21,6 @@ covered there rather than restate it - if you find yourself copying a whole rule
 staging model too?" If yes, it belongs in `AGENTS.md`. If it's really about the process of
 building a mart specifically, it belongs in the skill.
 
-Don't expect to get the split perfectly right on the first pass - Exercise 4 and 5 are where
-you'll find out whether it actually holds up, and it's normal to come back and adjust either
-file afterward.
+Don't expect to get the split perfectly right on the first pass - Exercise 4 is where you'll
+find out whether it actually holds up, and it's normal to come back and adjust either file
+afterward.
