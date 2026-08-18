@@ -1,7 +1,7 @@
 # Exercise 1 - what to expect
 
 There's no single correct output here, and that's the point. At this stage in the lab,
-`AGENTS.md` and the `create-mart-model` skill don't exist yet, so Wizard is working from
+Wizard doesn't have any project-specific standards written down yet, so it's working from
 nothing but the surrounding code and its own judgment. Two people running the exact same
 prompt can reasonably get two different (and equally "correct") models back.
 
