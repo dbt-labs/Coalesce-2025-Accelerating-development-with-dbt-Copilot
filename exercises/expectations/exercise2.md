@@ -19,6 +19,6 @@ won't be obvious unless you specifically look for them.
 dbt Studio can surface a data preview, column-level lineage, and an in-thread chart for the
 new model, not evaluating Wizard's modeling choices yet.
 
-If you don't find anything wrong, that's a legitimate result worth bringing to Exercise 3 too
-- it's good material for discussing which patterns Wizard picks up reliably versus which ones
+If you don't find anything wrong, that's a legitimate result worth bringing to Exercise 3 too.
+It's good material for discussing which patterns Wizard picks up reliably versus which ones
 need to be written down explicitly.

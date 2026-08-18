@@ -24,3 +24,6 @@ building a mart specifically, it belongs in the skill.
 Don't expect to get the split perfectly right on the first pass - Exercise 4 and 5 are where
 you'll find out whether it actually holds up, and it's normal to come back and adjust either
 file afterward.
+
+`example_AGENTS.md` and `example_SKILL.md` in this folder are one worked example of both
+files, for comparison once you've written your own - not something to copy beforehand.
