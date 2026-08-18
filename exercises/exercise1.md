@@ -3,6 +3,9 @@
 Practical block #1: create a new mart model, with tests and docs, by prompting the feature
 request in plain business terms.
 
+*See `expectations/exercise1.md` for what to expect from the result - Wizard's output isn't
+deterministic, so there's no single correct answer here.*
+
 1. In dbt Studio, open a new dbt Wizard chat.
 
 2. Prompt Wizard with the business request below. Don't add implementation detail (naming,

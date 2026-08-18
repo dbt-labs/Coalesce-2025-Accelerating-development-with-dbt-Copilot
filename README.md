@@ -29,6 +29,8 @@ models in `models/marts/`. `dbt-styleguide.md` documents this project's naming a
 conventions.
 
 - `exercises/` - the five hands-on exercises for this lab, in order.
-- `AGENTS.md` - always-on project context for dbt Wizard.
-- `.agents/skills/create-mart-model/` - a reusable skill for building new mart models in this
-  project.
+- `exercises/expectations/` - what to expect from each exercise's result. Wizard's output
+  isn't deterministic, so these describe a reasonable range of outcomes rather than a single
+  correct answer.
+- `dbt-styleguide.md` - this project's naming and SQL conventions, before you've split it
+  into `AGENTS.md` and a skill in Exercise 3.

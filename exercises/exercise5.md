@@ -3,6 +3,9 @@
 Practical block #5: a new task, start to finish. Let's see the whole loop - prompt, review,
 capture (if needed), accelerate - run through again on a different business question.
 
+*See `expectations/exercise5.md` for what to expect - less correction than Exercise 1, even
+though the business question is different.*
+
 1. Start a new dbt Wizard session and prompt with a new business request:
 
 <ul>
