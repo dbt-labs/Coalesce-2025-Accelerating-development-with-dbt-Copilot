@@ -3,9 +3,6 @@
 Practical block #4: delete the mart and rebuild it from scratch, now that your standards are
 captured, and compare against what you found in Exercise 2.
 
-*See `expectations/exercise4.md` for what to expect - a visible improvement, not necessarily
-a perfect one.*
-
 *_Note: Your model name might be different and needs to be adjusted in the following exercises._*
 
 1. Delete `models/marts/location_performance.sql` and `models/marts/location_performance.yml`.
