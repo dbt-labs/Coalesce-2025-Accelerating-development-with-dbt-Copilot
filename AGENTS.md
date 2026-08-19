@@ -5,8 +5,8 @@
   single-column key (for example, a grain of one row per location per day), generate a
   surrogate key with `{{ dbt_utils.generate_surrogate_key([...]) }}`, built from the grain's
   columns in the same order they're grouped by, and name the column `<model_name>_key` (so
-  `location_performance.sql` produces `location_performance_key`) - always ending in `_key`,
-  never `_id`, to distinguish a generated key from a natural primary key. A
+  `daily_location_performance.sql` produces `daily_location_performance_key`) - always
+  ending in `_key`, never `_id`, to distinguish a generated key from a natural primary key. A
   `dbt_utils.unique_combination_of_columns` test on the grain's columns is not a substitute
   for this - it can tell you the grain is unique, but the model still needs a real primary
   key column. Don't invent a different name or skip the surrogate key if the grain has no
@@ -64,8 +64,8 @@ ones - staging and intermediate models can be incremental too.
   which won't show up as a test failure.
 - The terminal CTE - the one immediately before the final `select` - is always named `final`
   in every model in this project. Never name it after the model itself (e.g. don't name the
-  last CTE in `location_performance.sql` `location_performance`) and never reuse an earlier
-  CTE's name.
+  last CTE in `daily_location_performance.sql` `daily_location_performance`) and never
+  reuse an earlier CTE's name.
 
 ## Testing and documentation
 

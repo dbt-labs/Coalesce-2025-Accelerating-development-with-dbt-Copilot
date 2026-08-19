@@ -29,7 +29,7 @@ across multiple independent test runs of the same prompt, not a deterministic sc
    (not just one side of a join), and whether it's safe against an empty target relation
    (`max(order_date)` from an empty table is `NULL`, which can silently exclude every row
    forever rather than loading anything - the same class of bug is documented and fixed in
-   `location_performance.sql`/`product_performance.sql`, but not in `AGENTS.md`/`SKILL.md`'s
+   `daily_location_performance.sql`/`product_performance.sql`, but not in `AGENTS.md`/`SKILL.md`'s
    predecessor form, so a fresh Wizard session has no way to know about it except by
    inference).
 
@@ -37,7 +37,7 @@ across multiple independent test runs of the same prompt, not a deterministic sc
 
 5. **Surrogate key naming.** `dbt_utils.generate_surrogate_key()` introduced unprompted, with
    a different key name each time it happened (`location_daily_performance_id` vs.
-   `daily_location_performance_id`). No fixed convention existed until it was added to
+   `daily_daily_location_performance_id`). No fixed convention existed until it was added to
    `dbt-styleguide.md` after these runs (should now be `<model_name>_key`).
 6. **Enrichment join type.** One run used `inner join` to `locations` rather than `left join`.
    Dormant in this dataset (no orders with an unmatched `location_id`), but it would silently

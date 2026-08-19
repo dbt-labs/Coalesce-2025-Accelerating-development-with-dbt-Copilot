@@ -2,13 +2,13 @@ models:
   # INSTRUCTOR EXAMPLE ONLY - deliberately violates every standard in AGENTS.md/SKILL.md.
   # VIOLATION: no config.meta.owner / config.group, unlike every other mart in this project.
   # VIOLATION: no model-level data_tests entry at all - only column-level tests below.
-  - name: location_performance_worst_case_example
+  - name: daily_location_performance_worst_case_example
     description: >
       Illustrative example only - deliberately violates every standard captured in
       AGENTS.md and SKILL.md, for use as a teaching example in Exercise 2/3 discussions.
       Not a real mart. One row per location and order date.
     columns:
-      - name: location_performance_worst_case_example_id
+      - name: daily_location_performance_worst_case_example_id
         description: Surrogate key for the location and order-date grain.
         data_tests:
           - not_null
@@ -35,7 +35,7 @@ models:
         description: The portion of revenue from drink items.
 
 unit_tests:
-  - name: test_location_performance_worst_case_example_aggregates_correctly
+  - name: test_daily_location_performance_worst_case_example_aggregates_correctly
     description: >
       This test passes - but its expected values were derived from the model's own
       (buggy) output, not independently verified arithmetic. That's the point: a
@@ -43,7 +43,7 @@ unit_tests:
       internally consistent with itself. total_revenue below is inflated - order 1 has
       two items, so its order_total (13.20) is counted twice (26.40) instead of once,
       plus order 2's 6.60, for 33.00 instead of the correct 19.80.
-    model: location_performance_worst_case_example
+    model: daily_location_performance_worst_case_example
     overrides:
       macros:
         is_incremental: false

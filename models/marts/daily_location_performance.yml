@@ -1,5 +1,5 @@
 models:
-  - name: location_performance
+  - name: daily_location_performance
     description: Daily performance summary per location, offering total revenue, order count, and a food vs. drink revenue split. One row per location per day.
     config:
       group: analytics_engineering
@@ -10,7 +10,7 @@ models:
           arguments:
             expression: "food_revenue + drink_revenue + other_revenue = total_revenue"
     columns:
-      - name: location_performance_key
+      - name: daily_location_performance_key
         description: Surrogate primary key, generated from location_id and order_date.
         data_tests:
           - not_null
@@ -43,7 +43,7 @@ models:
 unit_tests:
   - name: test_food_and_drink_revenue_split_correctly
     description: "Test that item-level revenue is split into food/drink/other buckets without double-counting an order that contains both."
-    model: location_performance
+    model: daily_location_performance
     overrides:
       macros:
         is_incremental: false

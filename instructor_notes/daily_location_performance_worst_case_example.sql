@@ -41,12 +41,12 @@ locations as (
 ),
 
 -- VIOLATION: terminal CTE named after the model itself, instead of `final`.
-location_performance_worst_case_example as (
+daily_location_performance_worst_case_example as (
 
     select
         -- VIOLATION: surrogate key named ..._id instead of ..._key
         {{ dbt_utils.generate_surrogate_key(['orders.location_id', 'orders.order_date']) }}
-            as location_performance_worst_case_example_id,
+            as daily_location_performance_worst_case_example_id,
         orders.location_id,
         locations.location_name,
         orders.order_date,
@@ -88,4 +88,4 @@ location_performance_worst_case_example as (
 
 )
 
-select * from location_performance_worst_case_example
+select * from daily_location_performance_worst_case_example

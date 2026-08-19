@@ -1,7 +1,7 @@
 {{
     config(
         materialized='incremental',
-        unique_key='location_performance_key',
+        unique_key='daily_location_performance_key',
         incremental_strategy='merge'
     )
 }}
@@ -112,7 +112,7 @@ final as (
 
     select
         {{ dbt_utils.generate_surrogate_key(['daily_location_summary.location_id', 'daily_location_summary.order_date']) }}
-            as location_performance_key,
+            as daily_location_performance_key,
         daily_location_summary.location_id,
         locations.location_name,
         daily_location_summary.order_date,

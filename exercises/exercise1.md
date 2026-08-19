@@ -18,12 +18,10 @@ total revenue, number of orders, and how much of that revenue comes from
 food vs. drinks. Can you build us a model for that, with tests and docs?
 </ul>
 
-3. Let Wizard investigate the project, propose a plan, and build. Wizard validates as it
+3. Let Wizard investigate the project and build the change. Wizard validates as it
    builds, so a working, built model is the normal outcome here - not a separate step.
 
-4. Don't just accept the first result. If something about Wizard's plan or output seems off,
-   or you want to see an alternative, ask a follow-up question before moving on. Iterating
-   with intent is the point of this exercise, not speed.
+4. If something about Wizard's plan or output seems off, or you want to see an alternative, 
+   ask a follow-up question before moving on. Iterating with intent is the point of this exercise, not speed.
 
-5. Once you have a model you're reasonably happy with, save it and move on to Exercise 2 -
-   you'll review it more closely there.
+5. Once you have a model you're reasonably happy with, save it.
