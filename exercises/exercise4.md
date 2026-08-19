@@ -25,13 +25,8 @@ total revenue, number of orders, and how much of that revenue comes from
 food vs. drinks. Can you build us a model for that, with tests and docs?
 </ul>
 
-5. If this build fails on a unit test with a schema-introspection error, that's the same known
-   dbt limitation from Exercise 1: unit tests on incremental models need the target table to
-   exist first. Wizard will figure this out! If it doesn't, run
-   `dbt run --empty --select <model_name>` yourself, then build again.
-
-6. Compare the result against your Exercise 2 findings. Does the new model + YAML file adhere to 
+5. Compare the result against your Exercise 2 findings. Does the new model + YAML file adhere to 
    the new rules we set?
 
-7. If anything still isn't right, that's useful signal too - it means your `AGENTS.md` or
+6. If anything still isn't right, that's useful signal too - it means your `AGENTS.md` or
    skill needs to be more specific. Refine it and try again.
