@@ -22,7 +22,3 @@ and docs. The model name itself may vary (`location_performance`,
 If your table's result looks meaningfully different from another table's, that doesn't mean
 either of you did something wrong. Exercise 2 is where you'll evaluate the result against
 this project's actual, specific conventions - not against an abstract ideal.
-
-**If something breaks:** if the build fails on a unit-test schema-introspection error, that's
-a known dbt limitation covered in the exercise itself, not a sign anything went wrong with
-Wizard's output.
