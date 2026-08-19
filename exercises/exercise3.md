@@ -31,17 +31,12 @@ recognizes a matching task, or invoked explicitly in a prompt. Skills are auto-d
    actually matches against to decide whether to use the skill automatically, so it needs to
    be specific enough to trigger on the right kind of request, not just a label.
 
-3. Write down the pattern for building a new mart model specifically: how to pick the
-   grain, when to build on an existing mart vs. a stg/intermediate model, when to aggregate
-   before joining, when to go incremental, what the yml needs to include. Don't repeat
-   anything you've already put in `AGENTS.md` in step 2/3 above - if a rule applies to every
-   model regardless of type, it belongs there, not here. This skill should only contain what's
-   specific to the "build a new mart" task.
+3. Go through the `dbt-styleguide.md` again and add all rules that specifically apply to mart models.
+   Ideally, the skill has a detailed set of instructions for Wizard on how you want your mart models
+   to be built but for time reasons, we simplify this to only the rules today.
 
 Once both files exist, you have two complementary mechanisms in place: `AGENTS.md` as
 always-on project context, and a skill for a specific repeatable task. Between the two of
 them, everything worth keeping from `dbt-styleguide.md` should now live in whichever one it
 actually belongs in. If you've moved everything that matters, the styleguide has done its
-job - it doesn't need to keep being a separate file Wizard has to be told to go read.
-
-Move on to Exercise 4 to see whether they pay off.
+job and can be deprecated.

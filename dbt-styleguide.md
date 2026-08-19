@@ -7,19 +7,15 @@
   `dbt_utils.unique_combination_of_columns`) is not a substitute for having an actual primary
   key column; every model needs one either way.
 - Counts should be prefixed with `count_` (for example, `count_orders`), not suffixed (avoid `orders_count`).
-- Surrogate/generated keys (for example, keys built with `dbt_utils.generate_surrogate_key`) should always be named `<model_name>_key` (for example, `location_performance_key`), not `<model_name>_id`. This distinguishes a generated key from a natural primary key, which is always named `<object>_id`.
+- Surrogate/generated keys (for example, keys built with `dbt_utils.generate_surrogate_key`) should always be named `<model_name>_key` (for example, `daily_location_performance_key`), not `<model_name>_id`. This distinguishes a generated key from a natural primary key, which is always named `<object>_id`.
 - Every mart model must set `config.meta.owner` and `config.group` in its yml, identifying
   the team that owns it. See `models/marts/_groups.yml` for the group definition and any
   existing mart's yml for the pattern.
-- Transactional, append-mostly models (one row per event, e.g. `orders`) should be
-  materialized as `incremental`, not `table`. See `models/marts/orders.sql` for the reference
-  implementation.
-- Every mart model needs at least one model-level `data_tests` entry (a test declared under
+- Transactional models and models with aggregates derived from transactional data should be materialized as `incremental`, not `table`. 
+- Every mart model should be checked model-level `data_tests` entry (a test declared under
   the model's top-level `data_tests:` key, not nested under a column) that could actually
-  catch a real bug - not just the column-level `not_null`/`unique` checks that come from
-  having a primary key. Concretely, write a check that reconciles independently-computed
-  values against each other, for example `lifetime_spend_pretax + lifetime_tax_paid =
-  lifetime_spend` (`customers.yml`).
+  catch a real bug. Concretely, write a check that reconciles independently-computed
+  values against each other.
 
   If a model genuinely has no such relationship to check, test that its grain has no
   duplicates with `dbt_utils.unique_combination_of_columns` as a fallback - but treat that as

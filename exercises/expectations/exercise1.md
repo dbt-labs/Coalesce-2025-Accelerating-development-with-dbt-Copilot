@@ -7,7 +7,7 @@ prompt can reasonably get two different (and equally "correct") models back.
 
 **What should come out:** a new mart with one row per location per day, covering total
 revenue, order count, and a food vs. drink revenue split, plus a `.yml` file with some tests
-and docs. The model name itself may vary (`location_performance`,
+and docs. The model name itself may vary (`daily_location_performance`,
 `location_daily_performance`, and similar have all shown up).
 
 **What's normal to see vary between runs:**

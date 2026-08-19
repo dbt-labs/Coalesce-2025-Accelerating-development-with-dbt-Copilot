@@ -5,14 +5,10 @@ captured, and compare against what you found in Exercise 2.
 
 *_Note: Your model name might be different and needs to be adjusted in the following exercises._*
 
-1. Delete `models/marts/location_performance.sql` and `models/marts/location_performance.yml`.
-
-2. Deleting the files doesn't drop the underlying table. If Wizard materialized
-   `location_performance` as `incremental`, the old table is still sitting in your schema, and
-   the next build would incrementally merge into leftover data rather than starting fresh.\
-   Drop it using the `--sql` flag in `dbt run-operation` (swap in your model's actual name if
-   Wizard named it something other than `location_performance`):\
-   `dbt run-operation --sql "drop table if exists {{ target.database }}.{{ target.schema }}.location_performance"`\
+1. Delete `models/marts/daily_location_performance.sql` and `models/marts/daily_location_performance.yml`.
+   Drop the table in your DEV schema using the `--sql` flag in `dbt run-operation` (swap in your model's actual name if
+   Wizard named it something other than `daily_location_performance`):\
+   `dbt run-operation --sql "drop table if exists {{ target.database }}.{{ target.schema }}.daily_location_performance"`\
 
 3. Start a brand new dbt Wizard session (a fresh chat, so nothing from the earlier
    conversation is still in context).

@@ -18,7 +18,7 @@ specific to marts.
 
 1. **Identify the grain.** State explicitly what one row represents (e.g. "one row per
    location per day"). Name the model to describe what it is, not how it's built (e.g.
-   `location_performance`, not `location_orders_joined`).
+   `daily_location_performance`, not `location_orders_joined`).
 
 2. **Decide materialization before you write any SQL.** If this mart's grain grows forward
    over time, or it's built on top of an already-incremental mart and shares its

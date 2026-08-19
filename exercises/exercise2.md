@@ -3,22 +3,24 @@
 Practical block #2: check if Wizard's output model matches our specific modeling
 requirements. If there are any violations, fix them.
 
-1. With `location_performance` open, ask Wizard to preview the resulting data.
+*_Note: Your model name might be different and needs to be adjusted in the following exercises._*
+
+1. With `daily_location_performance` open, ask Wizard to preview the resulting data.
 
 <ul>
-Show me a preview of location_performance.
+Show me a preview of daily_location_performance.
 </ul>
 
 2. Ask Wizard to visualize the data, right in the thread.
 
 <ul>
-Can you visualize total_revenue per location over time? A line-style plot, in-thread.
+Can you visualize total_revenue per location over time? Draw a scatter plot, in-thread.
 </ul>
 
 3. Ask Wizard to show you where this model sits in the DAG.
 
 <ul>
-Show me the lineage for location_performance, including column-level lineage.
+Show me the lineage for daily_location_performance.
 </ul>
 
 4. Confirm the data itself looks right at a glance: does revenue look plausible per
