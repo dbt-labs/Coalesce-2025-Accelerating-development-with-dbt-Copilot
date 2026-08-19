@@ -4,9 +4,6 @@ Practical block #3: take the requirements from Exercise 2 and wrap them into reu
 Decide what should make it into an always-on instruction file, what should make it into a
 task-specific skill, and what should be left as a one-off fix.
 
-*See `expectations/exercise3.md` for what to expect - there's no single right `AGENTS.md` or
-skill, just a shape that most good versions share.*
-
 ## Part 1: AGENTS.md
 
 `AGENTS.md`, at the project root, is always-on context - dbt Wizard reads it for every

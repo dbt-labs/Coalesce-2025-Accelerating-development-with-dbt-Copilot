@@ -3,9 +3,6 @@
 Practical block #2: check if Wizard's output model matches our specific modeling
 requirements. If there are any violations, fix them.
 
-*See `expectations/exercise2.md` for what to expect - how many deviations (if any) you find
-is expected to vary from table to table.*
-
 1. With `location_performance` open, ask Wizard to preview the resulting data.
 
 <ul>
