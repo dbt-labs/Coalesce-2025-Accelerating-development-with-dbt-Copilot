@@ -80,6 +80,12 @@ ones - staging and intermediate models can be incremental too.
     at transaction time, document that the figure reflects current pricing and may not match
     the actual historical transaction amount.
 
+## Validating changes
+
+- Whenever you build or change a model, preview the resulting data in-thread, show the
+  model's lineage, and run a `dbt compare` to show what changed - do this for every model
+  change, not just brand-new models.
+
 ## Model layering
 
 - Only staging models (`stg_*`) reference `{{ source(...) }}`. Every other model must be

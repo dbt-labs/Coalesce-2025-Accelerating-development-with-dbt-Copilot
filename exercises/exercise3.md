@@ -21,6 +21,11 @@ prompt in this project.
 3. Now capture anything that wasn't called out in `team_notes.md` at all, but that you
    still want Wizard to follow every time.
 
+4. Add a rule that turns the three review steps from Exercise 2 into something Wizard does
+   automatically whenever it builds or changes a model, instead of something you have to ask
+   for by hand every time: preview the resulting data in-thread, show the model's lineage,
+   and run a `dbt compare` to show what changed.
+
 ## Part 2: a custom skill
 
 A skill is a reusable, task-specific instruction package - used automatically when Wizard

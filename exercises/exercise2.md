@@ -26,11 +26,17 @@ Can you visualize total_revenue per location over time? Draw a scatter plot, in-
 Show me the lineage for daily_location_performance.
 </ul>
 
-4. Confirm the data itself looks right at a glance: does revenue look plausible per
+4. Ask Wizard to run a `dbt compare` and show you the results.
+
+<ul>
+Run a dbt compare on daily_location_performance and show me the results.
+</ul>
+
+5. Confirm the data itself looks right at a glance: does revenue look plausible per
    location? Does the food/drink split look plausible? Would you trust this if a store
    manager saw it tomorrow?
 
-5. Now look closer, and compare the model against `team_notes.md` and against the
+6. Now look closer, and compare the model against `team_notes.md` and against the
    project's other marts. Wizard infers standards from surrounding files, but there can be
    inconsistencies, and not everything that's written down actually gets followed. Work
    through this list - Wizard's actual output will vary run to run, so not everything below
@@ -60,5 +66,5 @@ Show me the lineage for daily_location_performance.
      `order_items`, `locations`), or did it re-join raw sources/staging models and re-derive
      logic (like food/drink classification) that already exists elsewhere?
 
-6. If you find violations, ask Wizard to fix them, or fix them yourself. Either way, you're
+7. If you find violations, ask Wizard to fix them, or fix them yourself. Either way, you're
    about to turn these findings into something reusable - keep a running list.

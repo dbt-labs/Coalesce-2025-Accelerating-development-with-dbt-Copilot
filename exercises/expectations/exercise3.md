@@ -21,6 +21,10 @@ covered there rather than restate it - if you find yourself copying a whole rule
 staging model too?" If yes, it belongs in `AGENTS.md`. If it's really about the process of
 building a mart specifically, it belongs in the skill.
 
+**The review-automation rule** (preview, lineage, and `dbt compare` on every model change) is
+a good example of a rule that belongs in `AGENTS.md`, not the skill - it applies to any
+model change, not just building a new mart.
+
 Don't expect to get the split perfectly right on the first pass - Exercise 4 is where you'll
 find out whether it actually holds up, and it's normal to come back and adjust either file
 afterward.
