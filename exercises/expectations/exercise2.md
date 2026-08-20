@@ -1,7 +1,7 @@
 # Exercise 2 - what to expect
 
 You're checking Wizard's model against this project's actual conventions - visible in
-`dbt-styleguide.md` and in the other marts - not against some abstract standard of "good
+`team_notes.md` and in the other marts - not against some abstract standard of "good
 dbt." The checklist in `exercise2.md` is the same list every table should work through; what
 varies is how many of those items turn out to be off.
 

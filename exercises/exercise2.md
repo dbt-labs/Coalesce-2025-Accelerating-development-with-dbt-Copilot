@@ -27,7 +27,7 @@ Show me the lineage for daily_location_performance.
    location? Does the food/drink split look plausible? Would you trust this if a store
    manager saw it tomorrow?
 
-5. Now look closer, and compare the model against `dbt-styleguide.md` and against the
+5. Now look closer, and compare the model against `team_notes.md` and against the
    project's other marts. Wizard infers standards from surrounding files, but there can be
    inconsistencies, and not everything that's written down actually gets followed. Work
    through this list - Wizard's actual output will vary run to run, so not everything below
