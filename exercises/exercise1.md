@@ -1,5 +1,7 @@
 # Exercise 1 - Build a mart with dbt Wizard
 
+**If you prefer a Google Doc, you can find the identical exercises and expectations in a Google Doc [here](https://docs.google.com/document/d/11Qun1g1NWPQeTg7-OInFfagHoQHdVdLCtey8deiEGsg/edit?usp=drive_link).**
+
 Practical block #1: create a new mart model, with tests and docs, by prompting the feature
 request in plain business terms.
 
