@@ -39,11 +39,6 @@ ones - staging and intermediate models can be incremental too.
   will silently produce wrong results once the source is filtered to a lookback window per
   run - either compute them over an unfiltered ref instead of the filtered import CTE, or
   drop the column if nothing depends on it.
-- If an incremental model has a unit test, its first-ever build will fail with a
-  schema-introspection error - dbt needs the target relation to exist to check its schema
-  against the unit test's `expect` block, and on a brand-new model it doesn't yet. Run
-  `dbt run --empty --select <model_name>` once first, then build normally. This only comes
-  up if the model has a unit test in the first place; not every model needs one.
 - After building an incremental model, run it a second time and confirm row counts and
   historical values are unchanged - a lookback filter that only covers part of the grain
   won't show up as a failure on the first run, only on the second.
@@ -69,7 +64,11 @@ ones - staging and intermediate models can be incremental too.
 
 ## Testing and documentation
 
-- Unit tests aren't required on every model - write one where it's actually useful.
+- Don't write `unit_tests` for models in this project. Combined with `incremental`
+  materialization, a unit test causes the model's first-ever build to fail with a
+  schema-introspection error, since dbt needs the target relation to exist to check its
+  schema against the unit test's `expect` block. Data tests (`data_tests:`, at the model or
+  column level) don't have this problem and are the right tool for catching real bugs here.
 - Document basis mismatches and temporal-consistency risk explicitly, in the column
   description, whenever they exist:
   - If a headline total and its component breakdowns use a different basis (e.g. one is

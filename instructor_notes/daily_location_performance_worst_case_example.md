@@ -7,9 +7,8 @@ captured" walkthrough, or a talking point if a table's Exercise 2 findings feel 
 
 **These files live outside `models/`, on purpose.** They're plain text here, not part of the
 dbt DAG - dbt will not parse or build them from this location. If you want to actually run
-them live, copy both files into `models/marts/`, run `dbt run --select
-daily_location_performance_worst_case_example --empty` once (see below for why), then `dbt build`.
-Delete them from `models/marts/` again afterward - don't leave them in the real project.
+them live, copy both files into `models/marts/`, then `dbt build`. Delete them from
+`models/marts/` again afterward - don't leave them in the real project.
 
 ## What's wrong, and where
 
@@ -31,19 +30,11 @@ Delete them from `models/marts/` again afterward - don't leave them in the real 
 Verified by actually building this model:
 
 - Because `order_items` is joined in before aggregating, a multi-item order's `order_total`
-  gets summed once per item instead of once per order. In the unit test fixture (order 1 has
-  two items, order 2 has one), `total_revenue` comes out to **33.00** instead of the correct
+  gets summed once per item instead of once per order. With two test orders (one with two
+  items, one with one item), `total_revenue` comes out to **33.00** instead of the correct
   **19.80** - purely from the join fan-out, nothing to do with the numbers being fake.
-- The broken incremental filter was confirmed live: after bootstrapping with
-  `dbt run --empty`, a normal `dbt build` run reported **success**, with the table left at
-  **zero rows**. No error, no warning - `max(order_date)` against the empty table is `NULL`,
-  the filter excludes everything, and the model silently never loads real data. This is the
-  single most dangerous failure mode in this whole example, because nothing about the run
-  output tells you it happened.
-
-**The unit test passes anyway.** Its `expect` values were derived from the model's own
-(buggy) output, not independently verified arithmetic - the same trap it's easy to fall into
-in real life by copying a query's actual output into a test fixture instead of reasoning
-about what the numbers should be. A passing unit test here only proves the SQL is internally
-consistent with itself, not that the business logic is correct. Worth pointing out if a table
-assumes "the tests pass" means "the model is right."
+- The broken incremental filter was confirmed live: a normal `dbt build` run reported
+  **success**, with the table left at **zero rows**. No error, no warning - `max(order_date)`
+  against the empty table is `NULL`, the filter excludes everything, and the model silently
+  never loads real data. This is the single most dangerous failure mode in this whole
+  example, because nothing about the run output tells you it happened.

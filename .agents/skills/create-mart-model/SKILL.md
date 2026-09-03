@@ -35,8 +35,6 @@ specific to marts.
      test that just restates the model's own arithmetic (e.g. asserting `a - b = c` when `c`
      was literally computed as `a - b` in the same query) - it can never fail and catches
      nothing.
-   - A `unit_tests` case if one's actually useful here (not required on every model, per
-     `AGENTS.md`).
 
 4. **Before finishing, re-check your output against `AGENTS.md` and step 3 above, rule by
    rule** - don't rely on having remembered everything correctly from earlier steps. Every

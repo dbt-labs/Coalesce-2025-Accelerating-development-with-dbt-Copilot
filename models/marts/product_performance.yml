@@ -39,22 +39,3 @@ models:
         description: The sum of supply cost for this product on this date.
       - name: total_margin
         description: total_revenue minus total_supply_cost.
-
-unit_tests:
-  - name: test_margin_computes_correctly
-    description: "Test that margin is revenue minus supply cost."
-    model: product_performance
-    overrides:
-      macros:
-        is_incremental: false
-    given:
-      - input: ref('order_items')
-        rows:
-          - {order_id: 1, order_item_id: 1, product_id: 1, order_date: "2026-01-01", product_price: 5.00, supply_cost: 2.00}
-          - {order_id: 2, order_item_id: 2, product_id: 1, order_date: "2026-01-01", product_price: 5.00, supply_cost: 2.00}
-      - input: ref('products')
-        rows:
-          - {product_id: 1, product_name: "Nutellaphone"}
-    expect:
-      rows:
-        - {product_id: 1, product_name: "Nutellaphone", order_date: "2026-01-01", count_orders: 2, count_items_sold: 2, total_revenue: 10.00, total_supply_cost: 4.00, total_margin: 6.00}
