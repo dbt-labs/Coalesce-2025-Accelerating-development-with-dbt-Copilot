@@ -10,10 +10,10 @@ captured, and compare against what you found in Exercise 2.
    Wizard named it something other than `daily_location_performance`):\
    `dbt run-operation --sql "drop table if exists {{ target.database }}.{{ target.schema }}.daily_location_performance"`\
 
-3. Start a brand new dbt Wizard session (a fresh chat, so nothing from the earlier
+2. Start a brand new dbt Wizard session (a fresh chat, so nothing from the earlier
    conversation is still in context).
 
-4. Use the exact same prompt from Exercise 1:
+3. Use the exact same prompt from Exercise 1:
 
 <ul>
 Our store managers want a daily view of how each location is performing:
@@ -21,8 +21,8 @@ total revenue, number of orders, and how much of that revenue comes from
 food vs. drinks. Can you build us a model for that, with tests and docs?
 </ul>
 
-5. Compare the result against your Exercise 2 findings. Does the new model + YAML file adhere to 
+4. Compare the result against your Exercise 2 findings. Does the new model + YAML file adhere to 
    the new rules we set?
 
-6. If anything still isn't right, that's useful signal too - it means your `AGENTS.md` or
+5. If anything still isn't right, that's useful signal too - it means your `AGENTS.md` or
    skill needs to be more specific. Refine it and try again.
