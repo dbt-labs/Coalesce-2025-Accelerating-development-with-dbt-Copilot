@@ -11,7 +11,7 @@ is expected to vary from table to table.*
 1. With `daily_location_performance` open, ask Wizard to preview the resulting data.
 
 <ul>
-Show me a preview of daily_location_performance.
+Show me a preview of daily_location_performance as a table.
 </ul>
 
 2. Ask Wizard to visualize the data, right in the thread.
