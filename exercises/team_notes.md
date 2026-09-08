@@ -17,11 +17,6 @@
   catch a real bug. Concretely, write a check that reconciles independently-computed
   values against each other.
 
-  If a model genuinely has no such relationship to check, test that its grain has no
-  duplicates with `dbt_utils.unique_combination_of_columns` as a fallback - but treat that as
-  a last resort, not the goal. A model with nothing under a top-level `data_tests:` key in its
-  yml does not meet this bar.
-
 ## Styling SQL
 
 - Aggregations should be executed as early as possible (on the smallest data set possible) before joining to another table. Never join a raw, un-aggregated table (like `order_items`) directly into the same step that does your final grouping - pre-aggregate it to its own grain in a dedicated CTE first.
