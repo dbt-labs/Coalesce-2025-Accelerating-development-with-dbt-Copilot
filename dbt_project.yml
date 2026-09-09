@@ -1,20 +1,13 @@
 name: jaffle_shop
 
-profile: jaffle_shop
+profile: yda_summit
 
 seed-paths: ["seeds"]
 model-paths: ["models"]
 macro-paths: ["macros"]
-
-target-path: "target"
 clean-targets:
   - "target"
   - "dbt_packages"
-
-seeds:
-  # Builds seeds into '<your_schema_name>_raw'
-  jaffle_shop:
-    +schema: raw
 
 models:
   jaffle_shop:
@@ -23,3 +16,5 @@ models:
       +materialized: view
     marts:
       +materialized: table
+flags:
+  require_generic_test_arguments_property: true

@@ -6,7 +6,7 @@ source as (
 
 ),
 
-renamed as (
+final as (
 
     select
 
@@ -19,4 +19,4 @@ renamed as (
 
 )
 
-select * from renamed
+select * from final
