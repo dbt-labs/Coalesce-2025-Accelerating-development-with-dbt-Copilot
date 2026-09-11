@@ -50,8 +50,6 @@ Run a dbt compare on daily_location_performance and show me the results.
    - **Materialization** - is this new mart a plain `table`, or `incremental` like `orders`?
      If it did go incremental, check the incremental condition: is it applied to every CTE
      that drives the grain? Is the incremental condition placed on the import CTEs?
-   - **Model-level tests** - open the yml. Is there at least one test under a top-level
-     `data_tests:` key (not nested under a column), or only column-level tests?
    - **yml config** - does it set `config.group` and `config.meta.owner` the same way?
    - **What it's built on** - did Wizard build on top of existing marts (`orders`,
      `order_items`, `locations`), or did it re-join raw sources/staging models and re-derive
