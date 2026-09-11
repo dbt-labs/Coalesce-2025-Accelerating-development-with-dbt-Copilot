@@ -24,6 +24,6 @@ food vs. drinks. Can you build us a model for that, with tests and docs?
    builds, so a working, built model is the normal outcome here - not a separate step.
 
 4. If something about Wizard's plan or output seems off, or you want to see an alternative,
-   ask a follow-up question before moving on. Iterating with intent is the point of this exercise, not speed.
+   ask a follow-up question before moving on.
 
 5. Once you have a model you're reasonably happy with, save it.
