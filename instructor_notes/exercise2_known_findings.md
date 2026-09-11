@@ -43,9 +43,6 @@ across multiple independent test runs of the same prompt, not a deterministic sc
    Dormant in this dataset (no orders with an unmatched `location_id`), but it would silently
    drop fact rows on any foreign-key gap, and every other mart in the project enriches with
    `left join`.
-7. **Missing model-level `data_tests`.** One run shipped a model with only column-level tests
-   and no model-level assertion at all, despite the model's own description making a claim
-   (about revenue reconciling to a subtotal) that nothing tested.
 
 ## What has reliably worked (worth noting if a table finds nothing wrong here)
 

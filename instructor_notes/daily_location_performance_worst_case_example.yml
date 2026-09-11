@@ -1,7 +1,6 @@
 models:
   # INSTRUCTOR EXAMPLE ONLY - deliberately violates every standard in AGENTS.md/SKILL.md.
   # VIOLATION: no config.meta.owner / config.group, unlike every other mart in this project.
-  # VIOLATION: no model-level data_tests entry at all - only column-level tests below.
   - name: daily_location_performance_worst_case_example
     description: >
       Illustrative example only - deliberately violates every standard captured in

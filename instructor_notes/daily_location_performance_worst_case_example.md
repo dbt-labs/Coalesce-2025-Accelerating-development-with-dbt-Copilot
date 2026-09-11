@@ -22,8 +22,7 @@ them live, copy both files into `models/marts/`, then `dbt build`. Delete them f
 | 4 | `inner join` to a dimension table (`locations`) instead of `left join` | the `inner join locations` line |
 | 5 | Incremental filter applied to only one of two driving CTEs, with no `coalesce()` safety net | the `orders` CTE's `is_incremental()` block - `order_items` has none at all |
 | 6 | Surrogate key named `..._id` instead of `..._key` | `daily_location_performance_worst_case_example_id` |
-| 7 | No model-level `data_tests` at all | the yml has only column-level tests |
-| 8 | No `config.meta.owner`/`config.group` | absent from the yml entirely |
+| 7 | No `config.meta.owner`/`config.group` | absent from the yml entirely |
 
 ## Two things worth calling out live, beyond the checklist
 
