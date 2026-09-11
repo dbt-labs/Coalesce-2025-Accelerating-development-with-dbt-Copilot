@@ -16,9 +16,8 @@ skimming for whatever stands out first - some deviations (like a subtly wrong jo
 won't be obvious unless you specifically look for them.
 
 **The preview, visualization, lineage, and `dbt compare` steps** should just work - you're
-confirming that dbt Studio can surface a data preview, an in-thread chart, column-level
-lineage, and a compare summary for the new model, not evaluating Wizard's modeling choices
-yet.
+confirming that dbt Studio can surface a data preview, an in-thread chart, lineage, and a
+compare summary for the new model, not evaluating Wizard's modeling choices yet.
 
 If you don't find anything wrong, that's a legitimate result worth bringing to Exercise 3 too.
 It's good material for discussing which patterns Wizard picks up reliably versus which ones
