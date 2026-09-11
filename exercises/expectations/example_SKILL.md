@@ -24,6 +24,5 @@ the process and requirements specific to building a mart.
    - A model description and a column description for every column.
    - `config.meta.owner` and `config.group` set, matching every other model in
      `models/marts/`. See `models/marts/_groups.yml`.
-   - At least one model-level `data_tests` entry that could actually catch a real bug.
 
 4. **Before finishing, re-check your output against `AGENTS.md` and step 3 above.**

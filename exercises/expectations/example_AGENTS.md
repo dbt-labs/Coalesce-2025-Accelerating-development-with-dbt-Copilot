@@ -25,10 +25,9 @@ written your own, not something to copy before you've tried it yourself.
 - When joining a fact-grain CTE to a dimension/reference table purely to enrich it with a descriptive attribute (for example, joining to `locations` for `location_name`), default to `left join`. Only use `inner join` when you specifically want to filter out rows with no match.
 - The final CTE in a model - the one immediately before the closing `select` - should always be named `final`. Never name it after the model itself, and never reuse an earlier CTE's name.
 
-## Governance and testing
+## Governance
 
 - Every mart model must set `config.meta.owner` and `config.group` in its yml, identifying the team that owns it. See `models/marts/_groups.yml` for the group definition and any existing mart's yml for the pattern.
-- Every mart model should have a model-level `data_tests` entry (a test declared under the model's top-level `data_tests:` key, not nested under a column) that could actually catch a real bug. Concretely, write a check that reconciles independently-computed values against each other.
 
 ## Validating changes
 
