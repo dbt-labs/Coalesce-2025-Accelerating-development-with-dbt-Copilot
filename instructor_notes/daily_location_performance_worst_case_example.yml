@@ -26,8 +26,6 @@ models:
       - name: order_count
         description: The number of orders placed at this location on this date.
       - name: total_revenue
-        # VIOLATION: no mention that this double-counts multi-item orders, or that it's
-        # on a different (tax-inclusive) basis than food_revenue/drink_revenue below.
         description: The total revenue for this location and date.
       - name: food_revenue
         description: The portion of revenue from food items.

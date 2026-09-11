@@ -1,4 +1,5 @@
--- INSTRUCTOR EXAMPLE ONLY - deliberately violates every standard in AGENTS.md/SKILL.md.
+-- INSTRUCTOR EXAMPLE ONLY - deliberately violates every standard in AGENTS.md/SKILL.md,
+-- plus one real incremental-model bug that isn't written down anywhere (see below).
 -- See instructor_notes/ for the annotated version and explanation.
 -- Do not use as a template, and do not ship this file to attendees.
 
@@ -57,9 +58,7 @@ daily_location_performance_worst_case_example as (
         -- VIOLATION (real bug, not just style): orders is joined directly to the
         -- un-aggregated order_items CTE, so a multi-item order's order_total is
         -- repeated once per item and gets summed multiple times here - this actually
-        -- inflates total_revenue, it's not just a style deviation. It's also on a
-        -- different basis than food/drink revenue below (tax-inclusive order_total vs.
-        -- pre-tax item prices) with that mismatch left undocumented.
+        -- inflates total_revenue, it's not just a style deviation.
         sum(orders.order_total) as total_revenue,
         sum(
             case

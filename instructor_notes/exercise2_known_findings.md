@@ -29,7 +29,7 @@ across multiple independent test runs of the same prompt, not a deterministic sc
    (not just one side of a join), and whether it's safe against an empty target relation
    (`max(order_date)` from an empty table is `NULL`, which can silently exclude every row
    forever rather than loading anything - the same class of bug is documented and fixed in
-   `daily_location_performance.sql`/`product_performance.sql`, but not in `AGENTS.md`/`SKILL.md`'s
+   `daily_location_performance.sql`, but not in `AGENTS.md`/`SKILL.md`'s
    predecessor form, so a fresh Wizard session has no way to know about it except by
    inference).
 
@@ -68,9 +68,14 @@ across multiple independent test runs of the same prompt, not a deterministic sc
 
 ## Why this list exists
 
-Every one of the "confirmed recurring gaps" and "found at least once" items above is now an
+Most of the "confirmed recurring gaps" and "found at least once" items above are now an
 explicit, written requirement in `AGENTS.md` and `.agents/skills/create-mart-model/SKILL.md`
-on this (the answer-key) branch. Exercise 3 has learners write their own version of both
+on this (the answer-key) branch - both files are intentionally trimmed to just
+`team_notes.md`'s content plus the review-automation rule, so they stay close to what a
+table would realistically produce in the time available. The empty-target-relation detail
+in item 4 is the one exception: it's a real risk, but it isn't written down anywhere on
+this branch either, which is itself worth pointing out if it comes up. Exercise 3 has
+learners write their own version of both
 files based on what they personally find - this list is your reference for what's *likely*
 findable, not a script for what they must find. Let them discover it; use this to know
 whether a table's list is on the right track or has missed something worth a nudge.
