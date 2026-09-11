@@ -34,12 +34,10 @@ specific to marts.
    - At least one model-level `data_tests` entry - declared under the model's top-level
      `data_tests:` key, not nested under a column - that could actually catch a real bug.
      Write a check that reconciles independently-computed values against each other, for
-     example `total_margin <= total_revenue` (`product_performance.yml`). This is required,
-     not optional - a mart with only column-level tests is incomplete. If a model genuinely
-     has nothing to reconcile, a `dbt_utils.unique_combination_of_columns` check on the grain
-     is an acceptable fallback, but treat it as a last resort, not the goal. Don't write a
-     test that just restates the model's own arithmetic (e.g. asserting `a - b = c` when `c`
-     was literally computed as `a - b` in the same query) - it can never fail and catches
+     example `order_items_subtotal = subtotal` (`orders.yml`). This is required, not
+     optional - a mart with only column-level tests is incomplete. Don't write a test that
+     just restates the model's own arithmetic (e.g. asserting `a - b = c` when `c` was
+     literally computed as `a - b` in the same query) - it can never fail and catches
      nothing.
 
 4. **Before finishing, re-check your output against `AGENTS.md` and step 3 above, rule by
